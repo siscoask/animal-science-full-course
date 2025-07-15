@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Animal Science Universe | Comprehensive Course Notes</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=Cinzel:wght@400;700&display=stylesheet" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root {
+            --primary: #3C1053; /* Deep cosmic purple for a sophisticated base */
+            --secondary: #D4A017; /* Warm amber gold for a luxurious, readable accent */
+            --accent: #2EC4B6; /* Vibrant teal for a nature-inspired, refreshing pop */
+            --background: #F8F4FF; /* Softer lavender-white for a clean, readable canvas */
+            --text-light: #1F0A44; /* Deep indigo for crisp readability */
+            --text-dark: #1F0A44;
+            --glass: rgba(255, 255, 255, 0.6);
+            --glass-hover: rgba(255, 255, 255, 0.8);
+            --shadow: rgba(60, 16, 83, 0.2); /* Subtle purple shadow for depth */
+            --glow: rgba(212, 160, 23, 0.5); /* Warm amber glow */
+            --highlight: #00A8CC; /* Bright cyan-teal for dynamic highlights */
+            --neutral: #E8ECEF; /* Light gray for secondary elements */
+        }
+
+        [data-theme="night"] {
+            --primary: #6B3FA0; /* Lighter cosmic purple for vibrant night mode */
+            --secondary: #D4A017;
+            --accent: #4AD1C4; /* Softer teal for night mode contrast */
+            --background: #1F1A3B; /* Dark cosmic navy for a starry feel */
+            --text-light: #E6E0FA; /* Pale lavender for readability in dark mode */
+            --text-dark: #1F0A44;
+            --glass: rgba(255, 255, 255, 0.3);
+            --glass-hover: rgba(255, 255, 255, 0.4);
+            --shadow: rgba(60, 16, 83, 0.4);
+            --glow: rgba(212, 160, 23, 0.5);
+            --highlight: #00A8CC;
+            --neutral: #4A4E69; /* Dark gray for secondary elements */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            font-family: 'Inter', sans-serif;
+            background: var(--background);
+            color: var(--text-light);
+            overflow-x: hidden;
+            transition: background 0.3s ease, color 0.3s ease;
+            line-height: 1.6;
+        }
+
+        .cosmic-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at center, rgba(46, 196, 182, 0.3) 0%, var(--background) 70%);
+            overflow: hidden;
+        }
+
+        .nebula {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(60, 16, 83, 0.2), rgba(46, 196, 182, 0.15), rgba(212, 160, 23, 0.1));
+            animation: nebulaShift 20s ease-in-out infinite;
+            opacity: 0.5;
+        }
+
+        @keyframes nebulaShift {
+            0% { transform: translate(0, 0); opacity: 0.5; }
+            50% { transform: translate(20px, 20px); opacity: 0.7; }
+            100% { transform: translate(0, 0); opacity: 0.5; }
+        }
+
+        .stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            background: var(--highlight);
+            border-radius: 50%;
+            opacity: 0.9;
+            animation: twinkle 6s infinite linear;
+        }
+
+        .small-star {
+            width: 2px;
+            height: 2px;
+            animation-duration: 5s;
+        }
+
+        .medium-star {
+            width: 4px;
+            height: 4px;
+            animation-duration: 7s;
+        }
+
+        .large-star {
+            width: 6px;
+            height: 6px;
+            animation-duration: 9s;
+        }
+
+        @keyframes twinkle {
+            0% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.3); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.9; }
+        }
+
+        .floating-particle {
+            position: absolute;
+            background: var(--glow);
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) translateX(0); opacity: 0.6; }
+            50% { opacity: 0.8; }
+            100% { transform: translateY(-100vh) translateX(20px); opacity: 0.4; }
+        }
+
+        .mode-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            border: 2px solid var(--secondary);
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .mode-toggle:hover {
+            background: var(--secondary);
+            transform: scale(1.1);
+        }
+
+        .mode-toggle i {
+            font-size: 1.4rem;
+            color: var(--text-light);
+        }
+
+        .main-container {
+            position: relative;
+            z-index: 1;
+            padding-bottom: 80px;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 120px 20px 60px;
+            position: relative;
+        }
+
+        .hero-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2.5rem, 7vw, 4.5rem);
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--text-light), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: titleGlow 2.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes titleGlow {
+            0% { filter: drop-shadow(0 0 10px var(--glow)); }
+            100% { filter: drop-shadow(0 0 25px var(--accent)); }
+        }
+
+        .hero-subtitle {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            opacity: 0.9;
+            margin-bottom: 30px;
+            animation: fadeInUp 1s ease 0.5s both;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .section {
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(1.8rem, 4vw, 2.2rem);
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        .knowledge-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .knowledge-card {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            border: 2px solid var(--neutral);
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 6px 20px var(--shadow);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .knowledge-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px var(--shadow);
+            border-color: var(--secondary);
+        }
+
+        .knowledge-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--highlight));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+
+        .knowledge-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .knowledge-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .knowledge-icon {
+            font-size: 2rem;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px var(--glow);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .knowledge-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        .knowledge-description {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            line-height: 1.7;
+            color: var(--text-light);
+        }
+
+        .knowledge-link {
+            display: inline-block;
+            margin-top: 10px;
+            color: var(--secondary);
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .knowledge-link:hover {
+            color: var(--highlight);
+            transform: translateX(5px);
+        }
+
+        .detail-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            z-index: 1002;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .detail-container {
+            background: linear-gradient(135deg, var(--glass), rgba(46, 196, 182, 0.3));
+            border: 2px solid var(--secondary);
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 900px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 6px 25px var(--shadow);
+            position: relative;
+            color: var(--text-light);
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .detail-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(1.6rem, 4vw, 2rem);
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 20px;
+            text-align: center;
+            background: linear-gradient(135deg, var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .detail-content {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(0.85rem, 2vw, 0.95rem);
+            line-height: 1.8;
+            color: var(--text-light);
+        }
+
+        .detail-section {
+            margin-bottom: 25px;
+            padding: 15px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.08);
+            transition: background 0.3s ease;
+        }
+
+        .detail-section:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .detail-subheader {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(1.2rem, 2.5vw, 1.4rem);
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .detail-subheader::after {
+            content: '';
+            width: 40px;
+            height: 2px;
+            background: var(--secondary);
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            border-radius: 1px;
+        }
+
+        .detail-list {
+            list-style-type: none;
+            padding-left: 15px;
+        }
+
+        .detail-list li {
+            position: relative;
+            margin-bottom: 10px;
+            padding-left: 15px;
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+            line-height: 1.7;
+            transition: color 0.3s ease;
+        }
+
+        .detail-list li:hover {
+            color: var(--secondary);
+        }
+
+        .detail-list li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--secondary);
+            font-size: 1rem;
+        }
+
+        .detail-list li strong {
+            color: var(--secondary);
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: var(--highlight);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            color: var(--text-light);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-top: 15px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .close-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px var(--glow);
+        }
+
+        footer {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-top: 2px solid var(--secondary);
+            padding: 20px;
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-top: 40px;
+        }
+
+        footer a {
+            color: var(--secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: var(--highlight);
+        }
+
+        @media (max-width: 1024px) {
+            .hero {
+                padding: 100px 15px 50px;
+            }
+
+            .hero-title {
+                font-size: clamp(2rem, 6vw, 3.5rem);
+            }
+
+            .knowledge-grid {
+                grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+                gap: 20px;
+            }
+
+            .detail-container {
+                padding: 25px;
+                max-width: 700px;
+                max-height: 90vh;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: 80px 15px 40px;
+            }
+
+            .hero-title {
+                font-size: clamp(1.8rem, 5vw, 3rem);
+            }
+
+            .section-title {
+                font-size: clamp(1.6rem, 4vw, 2rem);
+            }
+
+            .detail-container {
+                padding: 20px;
+                max-width: 95%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .knowledge-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .knowledge-card {
+                padding: 20px;
+            }
+
+            .knowledge-title {
+                font-size: 1.3rem;
+            }
+
+            .detail-container {
+                padding: 15px;
+                max-width: 95%;
+            }
+
+            .detail-title {
+                font-size: clamp(1.2rem, 3.5vw, 1.5rem);
+            }
+
+            .close-btn {
+                padding: 8px 16px;
+                font-size: 0.85rem;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.5s ease both;
+        }
+    </style>
+</head>
+<body data-theme="day">
+    <div class="cosmic-background">
+        <div class="nebula"></div>
+        <div class="stars" id="stars"></div>
+        <div class="particles" id="particles"></div>
+    </div>
+
+    <div class="mode-toggle" onclick="toggleTheme()">
+        <i class="fas fa-sun"></i>
+    </div>
+
+    <div class="main-container">
+        <section class="hero">
+            <h1 class="hero-title">Animal Science Universe</h1>
+            <p class="hero-subtitle">Comprehensive Notes for Animal Science Excellence, Powered by Alade Omotayo David</p>
+        </section>
+
+        <div class="container">
+            <section class="section" id="animal-breeding-genetics">
+                <h2 class="section-title">Animal Breeding and Genetics</h2>
+                <div class="knowledge-grid">
+                    <div class="knowledge-card fade-in-up" data-knowledge="animal-biotechnology">
+                        <div class="knowledge-header">
+                            <div class="knowledge-icon"><i class="fas fa-dna"></i></div>
+                            <h3 class="knowledge-title">Animal Biotechnology</h3>
+                        </div>
+                        <div class="knowledge-content">
+                            <p class="knowledge-description">Explore genetic engineering, cloning, and biotechnological tools for enhancing animal traits and productivity.</p>
+                            <a href="#" class="knowledge-link" onclick="toggleDetail('animal-biotechnology')">Learn More</a>
+                        </div>
+                    </div>
+                    <div class="knowledge-card fade-in-up" data-knowledge="animal-breeding-genetics">
+                        <div class="knowledge-header">
+                            <div class="knowledge-icon"><i class="fas fa-seedling"></i></div>
+                            <h3 class="knowledge-title">Animal Breeding and Genetics</h3>
+                        </div>
+                        <div class="knowledge-content">
+                            <p class="knowledge-description">Understand inheritance patterns, selective breeding, and genomic tools for livestock improvement.</p>
+                            <a href="#" class="knowledge-link" onclick="toggleDetail('animal-breeding-genetics')">Learn More</a>
+                        </div>
+                    </div>
+                    <div class="knowledge-card fade-in-up" data-knowledge="animal-biochemistry-nutrition">
+                        <div class="knowledge-header">
+                            <div class="knowledge-icon"><i class="fas fa-apple-alt"></i></div>
+                            <h3 class="knowledge-title">Animal Biochemistry and Nutrition</h3>
+                        </div>
+                        <div class="knowledge-content">
+                            <p class="knowledge-description">Study metabolic pathways and nutritional strategies for optimal animal health and growth.</p>
+                            <a href="#" class="knowledge-link" onclick="toggleDetail('animal-biochemistry-nutrition')">Learn More</a>
+                        </div>
+                    </div>
+                    <div class="knowledge-card fade-in-up" data-knowledge="animal-production-management">
+                        <div class="knowledge-header">
+                            <div class="knowledge-icon"><i class="fas fa-tractor"></i></div>
+                            <h3 class="knowledge-title">Animal Production and Management</h3>
+                        </div>
+                        <div class="knowledge-content">
+                            <p class="knowledge-description">Master sustainable livestock production, housing, and farm management practices.</p>
+                            <a href="#" class="knowledge-link" onclick="toggleDetail('animal-production-management')">Learn More</a>
+                        </div>
+                    </div>
+                    <div class="knowledge-card fade-in-up" data-knowledge="animal-health-biosecurity">
+                        <div class="knowledge-header">
+                            <div class="knowledge-icon"><i class="fas fa-shield-alt"></i></div>
+                            <h3 class="knowledge-title">Animal Health and Biosecurity</h3>
+                        </div>
+                        <div class="knowledge-content">
+                            <p class="knowledge-description">Learn disease prevention, vaccination, and biosecurity measures for livestock welfare.</p>
+                            <a href="#" class="knowledge-link" onclick="toggleDetail('animal-health-biosecurity')">Learn More</a>
+                        </div>
+                    </div>
+                    <div class="knowledge-card fade-in-up" data-knowledge="pasture-range-management">
+                        <div class="knowledge-header">
+                            <div class="knowledge-icon"><i class="fas fa-leaf"></i></div>
+                            <h3 class="knowledge-title">Pasture and Range Management</h3>
+                        </div>
+                        <div class="knowledge-content">
+                            <p class="knowledge-description">Discover sustainable grazing systems and pasture management techniques.</p>
+                            <a href="#" class="knowledge-link" onclick="toggleDetail('pasture-range-management')">Learn More</a>
+                        </div>
+                    </div>
+                    <div class="knowledge-card fade-in-up" data-knowledge="animal-physiology">
+                        <div class="knowledge-header">
+                            <div class="knowledge-icon"><i class="fas fa-heartbeat"></i></div>
+                            <h3 class="knowledge-title">Animal Physiology</h3>
+                        </div>
+                        <div class="knowledge-content">
+                            <p class="knowledge-description">Examine physiological processes like digestion, reproduction, and thermoregulation in animals.</p>
+                            <a href="#" class="knowledge-link" onclick="toggleDetail('animal-physiology')">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="animal-behavior-welfare">
+                <h2 class="section-title">Animal Behavior and Welfare</h2>
+                <div class="knowledge-grid">
+                    <div class="knowledge-card fade-in-up" data-knowledge="animal-behavior">
+                        <div class="knowledge-header">
+                            <div class="knowledge-icon"><i class="fas fa-paw"></i></div>
+                            <h3 class="knowledge-title">Animal Behavior</h3>
+                        </div>
+                        <div class="knowledge-content">
+                            <p class="knowledge-description">Study animal behaviors, including social interactions and environmental adaptations.</p>
+                            <a href="#" class="knowledge-link" onclick="toggleDetail('animal-behavior')">Learn More</a>
+                        </div>
+                    </div>
+                    <div class="knowledge-card fade-in-up" data-knowledge="animal-welfare">
+                        <div class="knowledge-header">
+                            <div class="knowledge-icon"><i class="fas fa-hand-holding-heart"></i></div>
+                            <h3 class="knowledge-title">Animal Welfare</h3>
+                        </div>
+                        <div class="knowledge-content">
+                            <p class="knowledge-description">Explore ethical treatment and welfare standards for livestock and companion animals.</p>
+                            <a href="#" class="knowledge-link" onclick="toggleDetail('animal-welfare')">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="sustainable-animal-agriculture">
+                <h2 class="section-title">Sustainable Animal Agriculture</h2>
+                <div class="knowledge-grid">
+                    <div class="knowledge-card fade-in-up" data-knowledge="sustainable-livestock-systems">
+                        <div class="knowledge-header">
+                            <div class="knowledge-icon"><i class="fas fa-globe"></i></div>
+                            <h3 class="knowledge-title">Sustainable Livestock Systems</h3>
+                        </div>
+                        <div class="knowledge-content">
+                            <p class="knowledge-description">Learn about eco-friendly livestock systems and reducing environmental impact.</p>
+                            <a href="#" class="knowledge-link" onclick="toggleDetail('sustainable-livestock-systems')">Learn More</a>
+                        </div>
+                    </div>
+                    <div class="knowledge-card fade-in-up" data-knowledge="climate-smart-agriculture">
+                        <div class="knowledge-header">
+                            <div class="knowledge-icon"><i class="fas fa-cloud-sun"></i></div>
+                            <h3 class="knowledge-title">Climate-Smart Agriculture</h3>
+                        </div>
+                        <div class="knowledge-content">
+                            <p class="knowledge-description">Discover practices to mitigate climate change in animal agriculture.</p>
+                            <a href="#" class="knowledge-link" onclick="toggleDetail('climate-smart-agriculture')">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="quiz-section">
+                <h2 class="section-title">Quiz Section</h2>
+                <div class="knowledge-grid">
+                    <div class="knowledge-card fade-in-up" data-knowledge="knowledge-quiz">
+                        <div class="knowledge-header">
+                            <div class="knowledge-icon"><i class="fas fa-question-circle"></i></div>
+                            <h3 class="knowledge-title">Animal Science Knowledge Quiz</h3>
+                        </div>
+                        <div class="knowledge-content">
+                            <p class="knowledge-description">Test your understanding of animal science concepts with our interactive quiz.</p>
+                            <a href="test.html" target="_blank" class="knowledge-link">Take the Quiz</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="detail-overlay" id="detailOverlay">
+            <div class="detail-container">
+                <h3 class="detail-title" id="detailTitle"></h3>
+                <div class="detail-content" id="detailContent"></div>
+                <button class="close-btn" onclick="closeDetail()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        Crafted with dedication by <a href="https://wa.me/+2348128197651" target="_blank">Sisco Ask</a> | © <span id="footer-year"></span> Animal Science Universe
+    </footer>
+
+    <script>
+        const knowledgeDetails = {
+            'animal-biotechnology': {
+                title: 'Animal Biotechnology',
+                content: `
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Overview</h4>
+                        <p>Animal biotechnology applies molecular biology techniques to improve animal traits, health, and productivity, driving advancements in sustainable agriculture.</p>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Key Concepts</h4>
+                        <ul class="detail-list">
+                            <li><strong>Genetic Engineering</strong>: Altering DNA to enhance traits like disease resistance (e.g., transgenic cows producing human proteins).</li>
+                            <li><strong>Cloning</strong>: Producing genetically identical animals (e.g., Dolly the sheep, 1996, via somatic cell nuclear transfer).</li>
+                            <li><strong>CRISPR-Cas9</strong>: Precision gene editing for traits like hornless cattle or improved wool quality in sheep.</li>
+                            <li><strong>Biotechnology Applications</strong>: Developing vaccines, improving feed efficiency, and creating disease-resistant breeds.</li>
+                            <li><strong>Ethical Considerations</strong>: Addressing animal welfare, environmental impact, and public perception.</li>
+                            <li><strong>Genomics</strong>: Mapping animal genomes to identify beneficial traits (e.g., bovine genome sequencing).</li>
+                        </ul>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Techniques</h4>
+                        <ul class="detail-list">
+                            <li><strong>Gene Cloning</strong>: Amplifying specific genes for insertion (e.g., insulin production in pigs).</li>
+                            <li><strong>Transgenesis</strong>: Introducing foreign genes (e.g., spider silk proteins in goat milk).</li>
+                            <li><strong>Embryo Transfer</strong>: Implanting genetically modified embryos for desired traits.</li>
+                            <li><strong>RNA Interference</strong>: Silencing genes to study effects or reduce disease susceptibility.</li>
+                            <li><strong>Gene Knockout</strong>: Disabling specific genes to study function or eliminate undesirable traits.</li>
+                        </ul>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Applications</h4>
+                        <ul class="detail-list">
+                            <li><strong>Medical</strong>: Producing pharmaceuticals (e.g., antithrombin in goat milk).</li>
+                            <li><strong>Agricultural</strong>: Enhancing growth rates (e.g., fast-growing salmon approved in 2015).</li>
+                            <li><strong>Environmental</strong>: Developing methane-reducing cattle to lower greenhouse gas emissions.</li>
+                            <li><strong>Conservation</strong>: Preserving endangered species through cloning or genetic banking.</li>
+                        </ul>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Challenges</h4>
+                        <ul class="detail-list">
+                            <li><strong>Regulatory Hurdles</strong>: Navigating approvals for genetically modified organisms.</li>
+                            <li><strong>Public Acceptance</strong>: Overcoming skepticism about biotech safety.</li>
+                            <li><strong>Cost</strong>: High investment in research and development.</li>
+                        </ul>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Notable Example</h4>
+                        <p>CRISPR-edited pigs resistant to porcine reproductive and respiratory syndrome (PRRS) show a 70% reduction in disease incidence.</p>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Key Note</h4>
+                        <p>Thanks to Alade Omotayo David’s vision, these notes empower students to master animal biotechnology for sustainable agriculture.</p>
+                    </div>
+                `
+            },
+            'animal-breeding-genetics': {
+                title: 'Animal Breeding and Genetics',
+                content: `
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Overview</h4>
+                        <p>Animal breeding and genetics focus on improving livestock traits through selective breeding and genetic principles, ensuring sustainable production.</p>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Key Concepts</h4>
+                        <ul class="detail-list">
+                            <li><strong>Mendelian Genetics</strong>: Inheritance of single-gene traits (e.g., coat color in cattle).</li>
+                            <li><strong>Quantitative Genetics</strong>: Polygenic traits like milk yield or growth rate (e.g., heritability of 0.3-0.5 for milk).</li>
+                            <li><strong>Selection Methods</strong>: Mass, pedigree, and genomic selection for traits like fertility or disease resistance.</li>
+                            <li><strong>Heritability</strong>: Genetic contribution to trait variation (e.g., 0.7 for egg production in poultry).</li>
+                            <li><strong>Inbreeding</strong>: Increases homozygosity but risks inbreeding depression.</li>
+                            <li><strong>Crossbreeding</strong>: Enhances hybrid vigor (e.g., Holstein x Jersey for dairy efficiency).</li>
+                        </ul>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Breeding Strategies</h4>
+                        <ul class="detail-list">
+                            <li><strong>Artificial Insemination (AI)</strong>: Improves genetic diversity (e.g., 80% of dairy cattle bred via AI).</li>
+                            <li><strong>Embryo Transfer</strong>: Multiplies elite offspring (e.g., 10-15 calves per donor cow annually).</li>
+                            <li><strong>Genomic Selection</strong>: Uses SNP chips to predict breeding value (e.g., adopted in 90% of U.S. dairy farms).</li>
+                            <li><strong>Hybrid Vigor</strong>: Improves growth and disease resistance (e.g., 10% faster growth in crossbred pigs).</li>
+                            <li><strong>Marker-Assisted Selection</strong>: Targets specific genes for desired traits.</li>
+                        </ul>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Applications</h4>
+                        <ul class="detail-list">
+                            <li><strong>Dairy</strong>: Selecting for high milk yield (e.g., Holsteins average 22,000 kg/year).</li>
+                            <li><strong>Beef</strong>: Breeding for lean meat and marbling (e.g., Angus cattle).</li>
+                            <li><strong>Poultry</strong>: Improving egg production (e.g., Leghorn hens lay 300 eggs/year).</li>
+                            <li><strong>Swine</strong>: Enhancing litter size and growth rate (e.g., Duroc pigs).</li>
+                        </ul>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Challenges</h4>
+                        <ul class="detail-list">
+                            <li><strong>Genetic Diversity</strong>: Maintaining diversity to avoid inbreeding depression.</li>
+                            <li><strong>Cost of Genomics</strong>: High initial investment in genomic tools.</li>
+                            <li><strong>Ethical Concerns</strong>: Balancing productivity with animal welfare.</li>
+                        </ul>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Example</h4>
+                        <p>Crossing Duroc and Yorkshire pigs results in 15% faster growth and improved meat quality due to heterosis.</p>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Key Note</h4>
+                        <p>Thanks to Alade Omotayo David’s vision, these notes empower students to master animal breeding & genetics.</p>
+                    </div>
+                `
+            },
+            'animal-biochemistry-nutrition': {
+                title: 'Animal Biochemistry and Nutrition',
+                content: `
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Overview</h4>
+                        <p>Animal biochemistry and nutrition study metabolic processes and dietary needs to optimize health, growth, and productivity in livestock.</p>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Key Concepts</h4>
+                        <ul class="detail-list">
+                            <li><strong>Macronutrients</strong>: Carbohydrates, proteins, and fats provide energy (e.g., 3.5 Mcal/kg for dairy cow energy).</li>
+                            <li><strong>Micronutrients</strong>: Vitamins and minerals (e.g., zinc for immune function, vitamin D for bone health).</li>
+                            <li><strong>Metabolic Pathways</strong>: Glycolysis, Krebs cycle, and beta-oxidation for energy production.</li>
+                            <li><strong>Rumen Biochemistry</strong>: Microbial fermentation produces volatile fatty acids (e.g., acetate in cattle).</li>
+                            <li><strong>Nutrient Requirements</strong>: Vary by species, age, and production stage (e.g., 18% protein for growing pigs).</li>
+                            <li><strong>Bioavailability</strong>: Nutrient absorption efficiency (e.g., chelated minerals improve uptake).</li>
+                        </ul>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Nutritional Strategies</h4>
+                        <ul class="detail-list">
+                            <li><strong>Balanced Diets</strong>: Formulating feed for energy and protein (e.g., 16% crude protein for dairy cows).</li>
+                            <li><strong>Additives</strong>: Probiotics and enzymes enhance digestion (e.g., phytase improves phosphorus uptake in poultry).</li>
+                            <li><strong>Feed Efficiency</strong>: Optimizing feed conversion ratio (e.g., 1.5:1 in broilers).</li>
+                            <li><strong>Precision Feeding</strong>: Tailoring diets to individual animal needs using technology.</li>
+                        </ul>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Applications</h4>
+                        <ul class="detail-list">
+                            <li><strong>Dairy</strong>: High-energy diets for lactation (e.g., corn silage for 30 kg/day milk yield).</li>
+                            <li><strong>Poultry</strong>: Calcium supplements for eggshell strength (e.g., 4 g/day for hens).</li>
+                            <li><strong>Swine</strong>: Amino acid supplements like lysine for growth (e.g., 1% in diets).</li>
+                            <li><strong>Aquaculture</strong>: Omega-3 enriched feeds for fish health.</li>
+                        </ul>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Challenges</h4>
+                        <ul class="detail-list">
+                            <li><strong>Feed Costs</strong>: Represent 60-70% of production costs.</li>
+                            <li><strong>Nutrient Imbalances</strong>: Can lead to health issues like acidosis in ruminants.</li>
+                            <li><strong>Sustainability</strong>: Reducing reliance on non-renewable feed sources.</li>
+                        </ul>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Example</h4>
+                        <p>Ruminant diets with 60% forage and 40% concentrate optimize volatile fatty acid production, boosting energy by 20%.</p>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Key Note</h4>
+                        <p>Thanks to Alade Omotayo David’s vision, these notes empower students to master animal biochemistry and nutrition for sustainable agriculture.</p>
+                    </div>
+                `
+            },
+            'animal-production-management': {
+                title: 'Animal Production and Management',
+                content: `
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Overview</h4>
+                        <p>Animal production and management focus on sustainable livestock systems to ensure food security and economic viability.</p>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Key Concepts</h4>
+                        <ul class="detail-list">
+                            <li><strong>Housing Systems</strong>: Free-range, intensive, and semi-intensive systems (e.g., deep litter for poultry).</li>
+                            <li><strong>Reproductive Management</strong>: Synchronizing estrus cycles (e.g., 21-day cycle in cows).</li>
+                            <li><strong>Feed Management</strong>: Optimizing feed costs, which account for 70% of production expenses.</li>
+                            <li><strong>Waste Management</strong>: Composting manure to reduce environmental impact (e.g., 50% reduction in nitrogen runoff).</li>
+                            <li><strong>Record Keeping</strong>: Tracking metrics like growth rate (e.g., 1 kg/day in beef cattle).</li>
+                            <li><strong>Technology Integration</strong>: Using IoT for monitoring livestock health.</li>
+                        </ul>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Production Systems</h4>
+                        <ul class="detail-list">
+                            <li><strong>Dairy</strong>: Automated milking parlors increase efficiency by 30%.</li>
+                            <li><strong>Beef</strong>: Feedlots for finishing cattle (e.g., 400 kg weight gain in 120 days).</li>
+                            <li><strong>Poultry</strong>: Battery cages vs. free-range for egg production (90% efficiency in cages).</li>
+                            <li><strong>Swine</strong>: Farrow-to-finish systems for streamlined production.</li>
+                        </ul>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Applications</h4>
+                        <ul class="detail-list">
+                            <li><strong>Precision Livestock Farming</strong>: Using sensors to monitor health and feed intake.</li>
+                            <li><strong>Automation</strong>: Robotic milking systems for dairy farms.</li>
+                            <li><strong>Sustainability</strong>: Integrating renewable energy in farm operations.</li>
+                        </ul>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Challenges</h4>
+                        <ul class="detail-list">
+                            <li><strong>Labor Costs</strong>: High in intensive systems.</li>
+                            <li><strong>Environmental Regulations</strong>: Compliance with emissions standards.</li>
+                            <li><strong>Animal Welfare</strong>: Balancing productivity with ethical standards.</li>
+                        </ul>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Example</h4>
+                        <p>Intensive poultry systems with 20,000 birds per house achieve 90% egg production efficiency with automated feeding.</p>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Key Note</h4>
+                        <p>Thanks to Alade Omotayo David’s vision, these notes empower students to master animal production management for sustainable agriculture.</p>
+                    </div>
+                `
+            },
+            'animal-health-biosecurity': {
+                title: 'Animal Health and Biosecurity',
+                content: `
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Overview</h4>
+                        <p>Animal health and biosecurity focus on preventing diseases and ensuring livestock welfare through robust practices.</p>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Key Concepts</h4>
+                        <ul class="detail-list">
+                            <li><strong>Vaccination</strong>: Prevents diseases like foot-and-mouth disease in cattle (90% efficacy).</li>
+                            <li><strong>Biosecurity Measures</strong>: Quarantine, sanitation, and restricted access (e.g., footbaths reduce pathogen spread by 80%).</li>
+                            <li><strong>Parasite Control</strong>: Deworming with ivermectin for cattle (e.g., 95% parasite reduction).</li>
+                            <li><strong>Disease Diagnosis</strong>: PCR testing for pathogens like avian influenza (99% accuracy).</li>
+                            <li><strong>Zoonoses</strong>: Managing diseases transmissible to humans (e.g., brucellosis in dairy herds).</li>
+                            <li><strong>Antimicrobial Resistance</strong>: Reducing antibiotic use to prevent resistance.</li>
+                        </ul>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Biosecurity Practices</h4>
+                        <ul class="detail-list">
+                            <li><strong>All-in/All-out Systems</strong>: Reduces disease carryover in poultry farms.</li>
+                            <li><strong>Disinfection</strong>: Hypochlorite solutions for farm cleaning (99% pathogen kill rate).</li>
+                            <li><strong>Monitoring</strong>: Regular health checks for early detection (e.g., 50% reduction in outbreak severity).</li>
+                            <li><strong>Quarantine</strong>: Isolating new animals to prevent disease introduction.</li>
+                        </ul>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Applications</h4>
+                        <ul class="detail-list">
+                            <li><strong>Poultry</strong>: Biosecurity to control avian influenza outbreaks.</li>
+                            <li><strong>Swine</strong>: Vaccination programs for porcine circovirus.</li>
+                            <li><strong>Dairy</strong>: Mastitis prevention through hygiene protocols.</li>
+                        </ul>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Challenges</h4>
+                        <ul class="detail-list">
+                            <li><strong>Cost</strong>: High investment in biosecurity infrastructure.</li>
+                            <li><strong>Compliance</strong>: Ensuring farmer adherence to protocols.</li>
+                            <li><strong>Emerging Diseases</strong>: Adapting to new pathogens like African swine fever.</li>
+                        </ul>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Example</h4>
+                        <p>Biosecurity protocols in swine farms reduced African swine fever outbreaks by 60% in controlled studies.</p>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Key Note</h4>
+                        <p>Thanks to Alade Omotayo David’s vision, these notes empower students to master animal health bio security.</p>
+                    </div>
+                `
+            },
+            'pasture-range-management': {
+                title: 'Pasture and Range Management',
+                content: `
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Overview</h4>
+                        <p>Pasture and range management optimize grazing systems for sustainable livestock production and environmental health.</p>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Key Concepts</h4>
+                        <ul class="detail-list">
+                            <li><strong>Rotational Grazing</strong>: Moving livestock to prevent overgrazing (e.g., 3-5 paddocks for cattle).</li>
+                            <li><strong>Forage Quality</strong>: High-protein grasses like alfalfa (e.g., 20% crude protein for dairy).</li>
+                            <li><strong>Carrying Capacity</strong>: Sustainable animal numbers (e.g., 1 cow/ha on temperate pastures).</li>
+                            <li><strong>Weed Control</strong>: Herbicides or grazing to manage invasive species (e.g., 70% weed reduction).</li>
+                            <li><strong>Soil Fertility</strong>: Fertilizers to enhance pasture growth (e.g., 50 kg/ha nitrogen).</li>
+                            <li><strong>Biodiversity</strong>: Maintaining diverse plant species for ecosystem health.</li>
+                        </ul>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Management Practices</h4>
+                        <ul class="detail-list">
+                            <li><strong>Seeding</strong>: Planting legumes for nitrogen fixation (e.g., clover increases soil nitrogen by 100 kg/ha).</li>
+                            <li><strong>Irrigation</strong>: Ensuring consistent forage availability (e.g., 30% yield increase).</li>
+                            <li><strong>Fencing</strong>: Electric fences for rotational grazing control.</li>
+                            <li><strong>Monitoring</strong>: Using drones to assess pasture health.</li>
+                        </ul>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Applications</h4>
+                        <ul class="detail-list">
+                            <li><strong>Dairy</strong>: High-quality pastures for milk production.</li>
+                            <li><strong>Beef</strong>: Extensive grazing for cost-effective production.</li>
+                            <li><strong>Sheep</strong>: Mixed pastures for wool and meat production.</li>
+                        </ul>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Challenges</h4>
+                        <ul class="detail-list">
+                            <li><strong>Overgrazing</strong>: Leads to soil degradation and reduced yields.</li>
+                            <li><strong>Climate Variability</strong>: Impacts forage availability.</li>
+                            <li><strong>Land Use Conflicts</strong>: Balancing grazing with conservation.</li>
+                        </ul>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Example</h4>
+                        <p>Rotational grazing on ryegrass pastures increased cattle weight gain by 20% compared to continuous grazing.</p>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Key Note</h4>
+                        <p>Thanks to Alade Omotayo David’s vision, these notes empower students to master pasture range management.</p>
+                    </div>
+                `
+            },
+            'animal-physiology': {
+                title: 'Animal Physiology',
+                content: `
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Overview</h4>
+                        <p>Animal physiology studies biological processes to optimize health, reproduction, and productivity in livestock.</p>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Key Concepts</h4>
+                        <ul class="detail-list">
+                            <li><strong>Digestion</strong>: Ruminant vs. monogastric systems (e.g., cattle have four stomach compartments).</li>
+                            <li><strong>Reproduction</strong>: Hormonal control of estrus (e.g., progesterone regulates cow cycles).</li>
+                            <li><strong>Respiration</strong>: Avian air sacs enable efficient gas exchange.</li>
+                            <li><strong>Circulation</strong>: Four-chambered heart in mammals supports high metabolism.</li>
+                            <li><strong>Thermoregulation</strong>: Panting in dogs and sweating in horses maintain body temperature.</li>
+                            <li><strong>Neurophysiology</strong>: Reflex arcs for rapid responses (e.g., flight response in horses).</li>
+                        </ul>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Physiological Processes</h4>
+                        <ul class="detail-list">
+                            <li><strong>Endocrine System</strong>: Hormones like insulin regulate metabolism (e.g., glucose control in pigs).</li>
+                            <li><strong>Immune System</strong>: Innate and adaptive immunity (e.g., vaccines trigger antibody production).</li>
+                            <li><strong>Musculoskeletal System</strong>: Muscle contraction for locomotion (e.g., fast-twitch fibers in broilers).</li>
+                            <li><strong>Renal System</strong>: Kidney function for waste excretion (e.g., urea cycle in mammals).</li>
+                        </ul>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Applications</h4>
+                        <ul class="detail-list">
+                            <li><strong>Reproductive Efficiency</strong>: Hormonal treatments to synchronize estrus in cattle (e.g., 15% higher conception rates).</li>
+                            <li><strong>Growth Optimization</strong>: Enhancing muscle development in broilers (e.g., 2 kg in 42 days).</li>
+                            <li><strong>Stress Management</strong>: Low-stress handling reduces cortisol in calves by 30%.</li>
+                            <li><strong>Health Monitoring</strong>: Wearable devices to track physiological parameters.</li>
+                        </ul>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Challenges</h4>
+                        <ul class="detail-list">
+                            <li><strong>Stress Impacts</strong>: Chronic stress reduces productivity.</li>
+                            <li><strong>Species Variation</strong>: Diverse physiological needs across species.</li>
+                            <li><strong>Environmental Factors</strong>: Heat stress affects reproduction and growth.</li>
+                        </ul>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Example</h4>
+                        <p>Hormonal regulation with GnRH and prostaglandins in dairy cows improves conception rates by up to 15%.</p>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Key Note</h4>
+                        <p>Thanks to Alade Omotayo David’s vision, these notes empower students to master animal physiology.</p>
+                    </div>
+                `
+            },
+            'animal-behavior': {
+                title: 'Animal Behavior',
+                content: `
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Overview</h4>
+                        <p>Animal behavior studies how animals interact with their environment, conspecifics, and humans to optimize welfare and productivity.</p>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Key Concepts</h4>
+                        <ul class="detail-list">
+                            <li><strong>Social Behavior</strong>: Hierarchy and group dynamics (e.g., dominance in cattle herds).</li>
+                            <li><strong>Foraging Behavior</strong>: Grazing patterns in ruminants (e.g., selective grazing in sheep).</li>
+                            <li><strong>Reproductive Behavior</strong>: Mating displays (e.g., courtship in poultry).</li>
+                            <li><strong>Stress Responses</strong>: Flight or fight responses (e.g., stampeding in cattle).</li>
+                            <li><strong>Learning</strong>: Conditioned behaviors (e.g., training horses for handling).</li>
+                            <li><strong>Ethology</strong>: Natural behavior studies to improve management practices.</li>
+                        </ul>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Behavioral Applications</h4>
+                        <ul class="detail-list">
+                            <li><strong>Housing Design</strong>: Enriched environments to reduce stress (e.g., perches for poultry).</li>
+                            <li><strong>Handling Techniques</strong>: Low-stress handling to improve welfare (e.g., 20% less stress in calves).</li>
+                            <li><strong>Training</strong>: Desensitizing animals to human interaction (e.g., halter training in horses).</li>
+                            <li><strong>Behavioral Monitoring</strong>: Using cameras to detect abnormal behaviors.</li>
+                        </ul>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Challenges</h4>
+                        <ul class="detail-list">
+                            <li><strong>Stress Management</strong>: Reducing aggression in confined systems.</li>
+                            <li><strong>Species-Specific Needs</strong>: Tailoring environments to natural behaviors.</li>
+                            <li><strong>Cost</strong>: Implementing enriched environments can be expensive.</li>
+                        </ul>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Example</h4>
+                        <p>Providing scratching posts for poultry reduces feather pecking by 40%, improving welfare.</p>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Key Note</h4>
+                        <p>Alade Omotayo David’s expertise makes these notes a gem for mastering animal behavior.</p>
+                    </div>
+                `
+            },
+            'animal-welfare': {
+                title: 'Animal Welfare',
+                content: `
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Overview</h4>
+                        <p>Animal welfare ensures ethical treatment, focusing on physical and psychological well-being of livestock and companion animals.</p>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Key Concepts</h4>
+                        <ul class="detail-list">
+                            <li><strong>Five Freedoms</strong>: Freedom from hunger, discomfort, pain, fear, and freedom to express normal behavior.</li>
+                            <li><strong>Welfare Indicators</strong>: Body condition score, lameness, and stress behaviors (e.g., tail biting in pigs).</li>
+                            <li><strong>Legislation</strong>: Animal welfare laws (e.g., EU Directive 98/58/EC for farm animals).</li>
+                            <li><strong>Enrichment</strong>: Providing stimuli to promote natural behaviors (e.g., toys for pigs).</li>
+                            <li><strong>Transport Welfare</strong>: Reducing stress during transport (e.g., 8-hour limit for cattle).</li>
+                            <li><strong>Slaughter Practices</strong>: Humane methods like stunning to minimize pain.</li>
+                        </ul>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Welfare Practices</h4>
+                        <ul class="detail-list">
+                            <li><strong>Housing</strong>: Providing adequate space (e.g., 1.8 m² per dairy cow).</li>
+                            <li><strong>Health Management</strong>: Regular veterinary checks to prevent disease.</li>
+                            <li><strong>Behavioral Enrichment</strong>: Nesting materials for poultry (e.g., 30% reduction in stress).</li>
+                            <li><strong>Training</strong>: Educating farmers on welfare standards.</li>
+                        </ul>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Applications</h4>
+                        <ul class="detail-list">
+                            <li><strong>Poultry</strong>: Cage-free systems improve welfare but increase costs.</li>
+                            <li><strong>Swine</strong>: Group housing for sows enhances social behavior.</li>
+                            <li><strong>Dairy</strong>: Soft bedding reduces lameness by 25%.</li>
+                        </ul>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Challenges</h4>
+                        <ul class="detail-list">
+                            <li><strong>Cost</strong>: Welfare improvements increase production expenses.</li>
+                            <li><strong>Consumer Demand</strong>: Balancing welfare with affordable products.</li>
+                            <li><strong>Global Standards</strong>: Varying welfare regulations across countries.</li>
+                        </ul>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Example</h4>
+                        <p>Free-range egg production systems improve hen welfare, increasing natural behaviors by 50%.</p>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Key Note</h4>
+                        <p>Alade Omotayo David’s passion ensures these notes are a vital resource for animal welfare.</p>
+                    </div>
+                `
+            },
+            'sustainable-livestock-systems': {
+                title: 'Sustainable Livestock Systems',
+                content: `
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Overview</h4>
+                        <p>Sustainable livestock systems aim to balance productivity, environmental health, and social responsibility.</p>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Key Concepts</h4>
+                        <ul class="detail-list">
+                            <li><strong>Resource Efficiency</strong>: Reducing feed and water use (e.g., 20% less water in integrated systems).</li>
+                            <li><strong>Waste Management</strong>: Converting manure to biogas (e.g., 1 ton manure = 50 m³ biogas).</li>
+                            <li><strong>Biodiversity</strong>: Integrating livestock with crop systems for ecosystem health.</li>
+                            <li><strong>Carbon Footprint</strong>: Reducing emissions (e.g., 30% lower methane with feed additives).</li>
+                            <li><strong>Regenerative Agriculture</strong>: Restoring soil health through grazing.</li>
+                        </ul>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Practices</h4>
+                        <ul class="detail-list">
+                            <li><strong>Mixed Farming</strong>: Combining crops and livestock for nutrient cycling.</li>
+                            <li><strong>Agroforestry</strong>: Integrating trees with grazing systems.</li>
+                            <li><strong>Precision Farming</strong>: Using technology to optimize resource use.</li>
+                            <li><strong>Organic Systems</strong>: Avoiding synthetic inputs for sustainability.</li>
+                        </ul>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Applications</h4>
+                        <ul class="detail-list">
+                            <li><strong>Dairy</strong>: Silvopastoral systems improve milk yield and soil health.</li>
+                            <li><strong>Beef</strong>: Grass-fed systems reduce environmental impact.</li>
+                            <li><strong>Poultry</strong>: Free-range systems with crop integration.</li>
+                        </ul>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Challenges</h4>
+                        <ul class="detail-list">
+                            <li><strong>Scalability</strong>: Applying sustainable practices to large operations.</li>
+                            <li><strong>Cost</strong>: Higher initial investment in sustainable systems.</li>
+                            <li><strong>Knowledge Gaps</strong>: Training farmers on new practices.</li>
+                        </ul>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Example</h4>
+                        <p>Silvopastoral systems combining cattle and trees increase carbon sequestration by 25%.</p>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Key Note</h4>
+                        <p>Thanks to Alade Omotayo David, these notes equip students for sustainable livestock system.</p>
+                    </div>
+                `
+            },
+            'climate-smart-agriculture': {
+                title: 'Climate-Smart Agriculture',
+                content: `
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Overview</h4>
+                        <p>Climate-smart agriculture integrates practices to enhance resilience, reduce emissions, and ensure food security in animal production.</p>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Key Concepts</h4>
+                        <ul class="detail-list">
+                            <li><strong>Methane Reduction</strong>: Feed additives like seaweed reduce emissions by 30%.</li>
+                            <li><strong>Water Conservation</strong>: Efficient irrigation for pastures (e.g., 40% water savings).</li>
+                            <li><strong>Resilience</strong>: Breeding for heat-tolerant animals (e.g., Zebu cattle).</li>
+                            <li><strong>Carbon Sequestration</strong>: Grazing practices to store carbon in soils.</li>
+                            <li><strong>Renewable Energy</strong>: Using solar power for farm operations.</li>
+                        </ul>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Practices</h4>
+                        <ul class="detail-list">
+                            <li><strong>Feed Additives</strong>: Using 3-NOP to reduce methane in ruminants.</li>
+                            <li><strong>Rotational Grazing</strong>: Enhances soil carbon storage (e.g., 1 ton/ha/year).</li>
+                            <li><strong>Precision Irrigation</strong>: Reduces water waste in pastures.</li>
+                            <li><strong>Climate-Resilient Breeds</strong>: Selecting breeds adapted to local conditions.</li>
+                        </ul>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Applications</h4>
+                        <ul class="detail-list">
+                            <li><strong>Dairy</strong>: Methane digesters for energy production.</li>
+                            <li><strong>Beef</strong>: Low-emission grazing systems.</li>
+                            <li><strong>Poultry</strong>: Energy-efficient housing designs.</li>
+                        </ul>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Challenges</h4>
+                        <ul class="detail-list">
+                            <li><strong>Cost</strong>: High upfront costs for technology adoption.</li>
+                            <li><strong>Scalability</strong>: Applying practices across diverse farm sizes.</li>
+                            <li><strong>Policy Support</strong>: Need for incentives to adopt climate-smart practices.</li>
+                        </ul>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Example</h4>
+                        <p>Adding seaweed to cattle feed reduced methane emissions by 30% in a 2021 Australian study.</p>
+                    </div>
+                    <div class="detail-section">
+                        <h4 class="detail-subheader">Key Note</h4>
+                        <p>Thanks to Alade Omotayo David, these notes equip students for climate-smart-agriculture.</p>
+                    </div>
+                `
+            }
+        };
+
+        // Function to generate random stars for the cosmic background
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const numStars = 150; // Increased for more stars
+            for (let i = 0; i < numStars; i++) {
+                const star = document.createElement('div');
+                const size = Math.random();
+                star.className = `star ${size < 0.5 ? 'small-star' : size < 0.8 ? 'medium-star' : 'large-star'}`;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.animationDelay = `${Math.random() * 7}s`;
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // Function to generate floating particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const numParticles = 30; // Number of floating particles
+            for (let i = 0; i < numParticles; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'floating-particle';
+                particle.style.width = `${Math.random() * 5 + 3}px`;
+                particle.style.height = particle.style.width;
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                particle.style.animationDelay = `${Math.random() * 15}s`;
+                particle.style.animationDuration = `${Math.random() * 10 + 10}s`;
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Function to toggle between day and night themes
+        function toggleTheme() {
+            const body = document.body;
+            const modeToggle = document.querySelector('.mode-toggle i');
+            const currentTheme = body.getAttribute('data-theme');
+            if (currentTheme === 'day') {
+                body.setAttribute('data-theme', 'night');
+                modeToggle.classList.remove('fa-sun');
+                modeToggle.classList.add('fa-moon');
+            } else {
+                body.setAttribute('data-theme', 'day');
+                modeToggle.classList.remove('fa-moon');
+                modeToggle.classList.add('fa-sun');
+            }
+        }
+
+        // Function to display detailed content in the overlay
+        function toggleDetail(key) {
+            const overlay = document.getElementById('detailOverlay');
+            const detailTitle = document.getElementById('detailTitle');
+            const detailContent = document.getElementById('detailContent');
+            const details = knowledgeDetails[key];
+            if (details) {
+                detailTitle.innerHTML = details.title;
+                detailContent.innerHTML = details.content;
+                overlay.style.display = 'flex';
+            }
+        }
+
+        // Function to close the detail overlay
+        function closeDetail() {
+            const overlay = document.getElementById('detailOverlay');
+            overlay.style.display = 'none';
+        }
+
+        // Set the current year in the footer
+        document.getElementById('footer-year').textContent = new Date().getFullYear();
+
+        // Initialize stars and particles on page load
+        window.onload = () => {
+            createStars();
+            createParticles();
+        };
+
+        // Add event listener for escape key to close overlay
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                closeDetail();
+            }
+        });
+    </script>
+</body>
+</html>

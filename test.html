@@ -1,0 +1,3802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Animal Science Universe | Interactive Quiz Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=Cinzel:wght@400;700&display=stylesheet" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+       :root {
+    --primary: #3C1053; /* Deep cosmic purple */
+    --secondary: #D4A017; /* Warm amber gold */
+    --accent: #2EC4B6; /* Vibrant teal */
+    --background: #F8F4FF; /* Soft lavender-white */
+    --text-light: #1F0A44; /* Deep indigo */
+    --text-dark: #1F0A44;
+    --glass: rgba(255, 255, 255, 0.6);
+    --glass-hover: rgba(255, 255, 255, 0.8);
+    --shadow: rgba(60, 16, 83, 0.2);
+    --glow: rgba(212, 160, 23, 0.5);
+    --highlight: #00A8CC; /* Bright cyan-teal */
+    --neutral: #E8ECEF; /* Light gray */
+    --success: #34C759; /* Green for correct answers */
+    --error: #FF3B30; /* Red for incorrect answers */
+}
+
+[data-theme="night"] {
+    --primary: #6B3FA0;
+    --secondary: #D4A017;
+    --accent: #4AD1C4;
+    --background: #1F1A3B;
+    --text-light: #E6E0FA;
+    --text-dark: #1F0A44;
+    --glass: rgba(255, 255, 255, 0.3);
+    --glass-hover: rgba(255, 255, 255, 0.4);
+    --shadow: rgba(60, 16, 83, 0.4);
+    --glow: rgba(212, 160, 23, 0.5);
+    --highlight: #00A8CC;
+    --neutral: #4A4E69;
+    --success: #34C759;
+    --error: #FF3B30;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    font-family: 'Inter', sans-serif;
+    background: var(--background);
+    color: var(--text-light);
+    overflow-x: hidden;
+    transition: background 0.3s ease, color 0.3s ease;
+    line-height: 1.6;
+}
+
+.cosmic-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background: radial-gradient(circle at center, rgba(46, 196, 182, 0.3) 0%, var(--background) 70%);
+    overflow: hidden;
+}
+
+.nebula {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, rgba(60, 16, 83, 0.2), rgba(46, 196, 182, 0.15), rgba(212, 160, 23, 0.1));
+    animation: nebulaShift 20s ease-in-out infinite;
+    opacity: 0.5;
+}
+
+@keyframes nebulaShift {
+    0% { transform: translate(0, 0); opacity: 0.5; }
+    50% { transform: translate(20px, 20px); opacity: 0.7; }
+    100% { transform: translate(0, 0); opacity: 0.5; }
+}
+
+.stars {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.star {
+    position: absolute;
+    background: var(--highlight);
+    border-radius: 50%;
+    opacity: 0.9;
+    animation: twinkle 6s infinite linear;
+}
+
+.small-star {
+    width: 2px;
+    height: 2px;
+    animation-duration: 5s;
+}
+
+.medium-star {
+    width: 4px;
+    height: 4px;
+    animation-duration: 7s;
+}
+
+.large-star {
+    width: 6px;
+    height: 6px;
+    animation-duration: 9s;
+}
+
+@keyframes twinkle {
+    0% { transform: scale(1); opacity: 0.9; }
+    50% { transform: scale(1.3); opacity: 1; }
+    100% { transform: scale(1); opacity: 0.9; }
+}
+
+.floating-particle {
+    position: absolute;
+    background: var(--glow);
+    border-radius: 50%;
+    opacity: 0.6;
+    animation: float 15s infinite linear;
+}
+
+@keyframes float {
+    0% { transform: translateY(0) translateX(0); opacity: 0.6; }
+    50% { opacity: 0.8; }
+    100% { transform: translateY(-100vh) translateX(20px); opacity: 0.4; }
+}
+
+.mode-toggle {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1001;
+    background: var(--glass);
+    backdrop-filter: blur(15px);
+    border: 2px solid var(--secondary);
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.mode-toggle:hover {
+    background: var(--secondary);
+    transform: scale(1.1);
+}
+
+.mode-toggle i {
+    font-size: 1.4rem;
+    color: var(--text-light);
+}
+
+.main-container {
+    position: relative;
+    z-index: 1;
+    padding-bottom: 80px;
+    width: 100%;
+    max-width: 100%;
+}
+
+.hero {
+    text-align: center;
+    padding: 120px 20px 60px;
+    position: relative;
+}
+
+.hero-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(2.5rem, 7vw, 4.5rem);
+    font-weight: 700;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, var(--text-light), var(--secondary), var(--accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: titleGlow 2.5s ease-in-out infinite alternate;
+}
+
+@keyframes titleGlow {
+    0% { filter: drop-shadow(0 0 10px var(--glow)); }
+    100% { filter: drop-shadow(0 0 25px var(--accent)); }
+}
+
+.hero-subtitle {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+    opacity: 0.9;
+    margin-bottom: 30px;
+    animation: fadeInUp 1s ease 0.5s both;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.section {
+    margin-bottom: 60px;
+}
+
+.section-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(1.8rem, 4vw, 2.2rem);
+    font-weight: 700;
+    color: var(--secondary);
+    margin-bottom: 30px;
+    text-align: center;
+    position: relative;
+}
+
+.section-title::after {
+    content: '';
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 2px;
+}
+
+.quiz-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+.quiz-card {
+    background: var(--glass);
+    backdrop-filter: blur(15px);
+    border: 2px solid var(--neutral);
+    border-radius: 15px;
+    padding: 25px;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    box-shadow: 0 6px 20px var(--shadow);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.quiz-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px var(--shadow);
+    border-color: var(--secondary);
+}
+
+.quiz-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary), var(--highlight));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+}
+
+.quiz-card:hover::before {
+    transform: scaleX(1);
+}
+
+.quiz-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.quiz-icon {
+    font-size: 2rem;
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px var(--glow);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.quiz-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-light);
+}
+
+.quiz-description {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: var(--text-light);
+}
+
+.quiz-link {
+    display: inline-block;
+    margin-top: 10px;
+    color: var(--secondary);
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.quiz-link:hover {
+    color: var(--highlight);
+    transform: translateX(5px);
+}
+
+.quiz-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--glass);
+    backdrop-filter: blur(15px);
+    z-index: 1002;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.quiz-container {
+    background: linear-gradient(135deg, var(--glass), rgba(46, 196, 182, 0.3));
+    border: 2px solid var(--secondary);
+    border-radius: 15px;
+    padding: 30px;
+    max-width: 900px;
+    width: 90%;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 6px 25px var(--shadow);
+    position: relative;
+    color: var(--text-light);
+    animation: fadeInUp 0.5s ease;
+}
+
+.quiz-title-overlay {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(1.6rem, 4vw, 2rem);
+    font-weight: 700;
+    color: var(--secondary);
+    margin-bottom: 20px;
+    text-align: center;
+    background: linear-gradient(135deg, var(--secondary), var(--accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.quiz-question {
+    margin-bottom: 25px;
+    padding: 15px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    transition: background 0.3s ease;
+}
+
+.quiz-question:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.quiz-question-text {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(0.9rem, 2vw, 1rem);
+    font-weight: 600;
+    color: var(--text-light);
+    margin-bottom: 10px;
+}
+
+.quiz-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.quiz-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px;
+    border: 2px solid var(--neutral);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    width: 100%;
+    z-index: 10;
+    background: var(--glass);
+}
+
+.quiz-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.quiz-option label {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    color: var(--text-light);
+    cursor: pointer;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-left: 26px;
+}
+
+.quiz-option::before {
+    content: '';
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--neutral);
+    border-radius: 50%;
+    background: transparent;
+    transition: all 0.3s ease;
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 0;
+}
+
+.quiz-option.selected {
+    border-color: var(--secondary);
+    background: var(--glass-hover);
+}
+
+.quiz-option.selected::before {
+    border-color: var(--secondary);
+    background: var(--secondary);
+    box-shadow: inset 0 0 0 3px var(--background);
+}
+
+.quiz-option:hover {
+    border-color: var(--secondary);
+    background: var(--glass-hover);
+}
+
+.quiz-option:hover::before {
+    border-color: var(--secondary);
+}
+
+.quiz-option.correct {
+    border-color: var(--success);
+    background: rgba(52, 199, 89, 0.2);
+}
+
+.quiz-option.correct::before {
+    background: var(--success);
+    border-color: var(--success);
+}
+
+.quiz-option.incorrect {
+    border-color: var(--error);
+    background: rgba(255, 59, 48, 0.2);
+}
+
+.quiz-option.incorrect::before {
+    background: var(--error);
+    border-color: var(--error);
+}
+
+.submit-btn, .close-btn {
+    background: var(--highlight);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    color: var(--text-light);
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-top: 15px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.submit-btn:hover, .close-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px var(--glow);
+}
+
+.result-container {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    text-align: center;
+    display: none;
+}
+
+.result-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    color: var(--text-light);
+}
+
+.result-score {
+    font-family: 'Cinzel', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--secondary);
+    margin: 10px 0;
+}
+
+footer {
+    background: var(--glass);
+    backdrop-filter: blur(10px);
+    border-top: 2px solid var(--secondary);
+    padding: 20px;
+    text-align: center;
+    color: var(--text-light);
+    font-size: 0.9rem;
+    margin-top: 40px;
+}
+
+footer a {
+    color: var(--secondary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+footer a:hover {
+    color: var(--highlight);
+}
+
+@media (max-width: 1024px) {
+    .hero {
+        padding: 100px 15px 50px;
+    }
+
+    .hero-title {
+        font-size: clamp(2rem, 6vw, 3.5rem);
+    }
+
+    .quiz-grid {
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 20px;
+    }
+
+    .quiz-container {
+        padding: 25px;
+        max-width: 700px;
+        max-height: 90vh;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero {
+        padding: 80px 15px 40px;
+    }
+
+    .hero-title {
+        font-size: clamp(1.8rem, 5vw, 3rem);
+    }
+
+    .section-title {
+        font-size: clamp(1.6rem, 4vw, 2rem);
+    }
+
+    .quiz-container {
+        padding: 20px;
+        max-width: 95%;
+    }
+}
+
+@media (max-width: 480px) {
+    .quiz-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .quiz-card {
+        padding: 20px;
+    }
+
+    .quiz-title {
+        font-size: 1.3rem;
+    }
+
+    .quiz-container {
+        padding: 15px;
+        max-width: 95%;
+    }
+
+    .quiz-title-overlay {
+        font-size: clamp(1.2rem, 3.5vw, 1.5rem);
+    }
+
+    .submit-btn, .close-btn {
+        padding: 8px 16px;
+        font-size: 0.85rem;
+    }
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in-up {
+    animation: fadeInUp 0.5s ease both;
+}
+    </style>
+</head>
+<body data-theme="day">
+    <div class="cosmic-background">
+        <div class="nebula"></div>
+        <div class="stars" id="stars"></div>
+        <div class="particles" id="particles"></div>
+    </div>
+
+    <div class="mode-toggle" onclick="toggleTheme()">
+        <i class="fas fa-sun"></i>
+    </div>
+
+    <div class="main-container">
+        <section class="hero">
+            <h1 class="hero-title">Animal Science Universe</h1>
+            <p class="hero-subtitle">Interactive Quiz Platform Powered by Alade Omotayo David</p>
+        </section>
+
+        <div class="container">
+            <section class="section" id="animal-breeding-genetics">
+                <h2 class="section-title">Animal Breeding and Genetics</h2>
+                <div class="quiz-grid">
+                    <div class="quiz-card fade-in-up" data-quiz="animal-biotechnology">
+                        <div class="quiz-header">
+                            <div class="quiz-icon"><i class="fas fa-dna"></i></div>
+                            <h3 class="quiz-title">Animal Biotechnology</h3>
+                        </div>
+                        <div class="quiz-content">
+                            <p class="quiz-description">Test your knowledge on genetic engineering and biotechnological tools.</p>
+                            <a href="#" class="quiz-link" onclick="toggleQuiz('animal-biotechnology')">Take Quiz</a>
+                        </div>
+                    </div>
+                    <div class="quiz-card fade-in-up" data-quiz="animal-breeding-genetics">
+                        <div class="quiz-header">
+                            <div class="quiz-icon"><i class="fas fa-seedling"></i></div>
+                            <h3 class="quiz-title">Animal Breeding and Genetics</h3>
+                        </div>
+                        <div class="quiz-content">
+                            <p class="quiz-description">Assess your understanding of selective breeding and genomics.</p>
+                            <a href="#" class="quiz-link" onclick="toggleQuiz('animal-breeding-genetics')">Take Quiz</a>
+                        </div>
+                    </div>
+                    <div class="quiz-card fade-in-up" data-quiz="animal-biochemistry-nutrition">
+                        <div class="quiz-header">
+                            <div class="quiz-icon"><i class="fas fa-apple-alt"></i></div>
+                            <h3 class="quiz-title">Animal Biochemistry and Nutrition</h3>
+                        </div>
+                        <div class="quiz-content">
+                            <p class="quiz-description">Challenge yourself on metabolic pathways and nutrition.</p>
+                            <a href="#" class="quiz-link" onclick="toggleQuiz('animal-biochemistry-nutrition')">Take Quiz</a>
+                        </div>
+                    </div>
+                    <div class="quiz-card fade-in-up" data-quiz="animal-production-management">
+                        <div class="quiz-header">
+                            <div class="quiz-icon"><i class="fas fa-tractor"></i></div>
+                            <h3 class="quiz-title">Animal Production and Management</h3>
+                        </div>
+                        <div class="quiz-content">
+                            <p class="quiz-description">Evaluate your skills in livestock production and management.</p>
+                            <a href="#" class="quiz-link" onclick="toggleQuiz('animal-production-management')">Take Quiz</a>
+                        </div>
+                    </div>
+                    <div class="quiz-card fade-in-up" data-quiz="animal-health-biosecurity">
+                        <div class="quiz-header">
+                            <div class="quiz-icon"><i class="fas fa-shield-alt"></i></div>
+                            <h3 class="quiz-title">Animal Health and Biosecurity</h3>
+                        </div>
+                        <div class="quiz-content">
+                            <p class="quiz-description">Test your expertise in disease prevention and biosecurity.</p>
+                            <a href="#" class="quiz-link" onclick="toggleQuiz('animal-health-biosecurity')">Take Quiz</a>
+                        </div>
+                    </div>
+                    <div class="quiz-card fade-in-up" data-quiz="pasture-range-management">
+                        <div class="quiz-header">
+                            <div class="quiz-icon"><i class="fas fa-leaf"></i></div>
+                            <h3 class="quiz-title">Pasture and Range Management</h3>
+                        </div>
+                        <div class="quiz-content">
+                            <p class="quiz-description">Assess your knowledge of sustainable grazing systems.</p>
+                            <a href="#" class="quiz-link" onclick="toggleQuiz('pasture-range-management')">Take Quiz</a>
+                        </div>
+                    </div>
+                    <div class="quiz-card fade-in-up" data-quiz="animal-physiology">
+                        <div class="quiz-header">
+                            <div class="quiz-icon"><i class="fas fa-heartbeat"></i></div>
+                            <h3 class="quiz-title">Animal Physiology</h3>
+                        </div>
+                        <div class="quiz-content">
+                            <p class="quiz-description">Challenge yourself on animal physiological processes.</p>
+                            <a href="#" class="quiz-link" onclick="toggleQuiz('animal-physiology')">Take Quiz</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="animal-behavior-welfare">
+                <h2 class="section-title">Animal Behavior and Welfare</h2>
+                <div class="quiz-grid">
+                    <div class="quiz-card fade-in-up" data-quiz="animal-behavior">
+                        <div class="quiz-header">
+                            <div class="quiz-icon"><i class="fas fa-paw"></i></div>
+                            <h3 class="quiz-title">Animal Behavior</h3>
+                        </div>
+                        <div class="quiz-content">
+                            <p class="quiz-description">Test your understanding of animal social interactions.</p>
+                            <a href="#" class="quiz-link" onclick="toggleQuiz('animal-behavior')">Take Quiz</a>
+                        </div>
+                    </div>
+                    <div class="quiz-card fade-in-up" data-quiz="animal-welfare">
+                        <div class="quiz-header">
+                            <div class="quiz-icon"><i class="fas fa-hand-holding-heart"></i></div>
+                            <h3 class="quiz-title">Animal Welfare</h3>
+                        </div>
+                        <div class="quiz-content">
+                            <p class="quiz-description">Assess your knowledge of ethical animal treatment.</p>
+                            <a href="#" class="quiz-link" onclick="toggleQuiz('animal-welfare')">Take Quiz</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="sustainable-animal-agriculture">
+                <h2 class="section-title">Sustainable Animal Agriculture</h2>
+                <div class="quiz-grid">
+                    <div class="quiz-card fade-in-up" data-quiz="sustainable-livestock-systems">
+                        <div class="quiz-header">
+                            <div class="quiz-icon"><i class="fas fa-globe"></i></div>
+                            <h3 class="quiz-title">Sustainable Livestock Systems</h3>
+                        </div>
+                        <div class="quiz-content">
+                            <p class="quiz-description">Evaluate your skills in eco-friendly livestock systems.</p>
+                            <a href="#" class="quiz-link" onclick="toggleQuiz('sustainable-livestock-systems')">Take Quiz</a>
+                        </div>
+                    </div>
+                    <div class="quiz-card fade-in-up" data-quiz="climate-smart-agriculture">
+                        <div class="quiz-header">
+                            <div class="quiz-icon"><i class="fas fa-cloud-sun"></i></div>
+                            <h3 class="quiz-title">Climate-Smart Agriculture</h3>
+                        </div>
+                        <div class="quiz-content">
+                            <p class="quiz-description">Test your expertise in climate-resilient practices.</p>
+                            <a href="#" class="quiz-link" onclick="toggleQuiz('climate-smart-agriculture')">Take Quiz</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="quiz-overlay" id="quizOverlay">
+            <div class="quiz-container">
+                <h3 class="quiz-title-overlay" id="quizTitle"></h3>
+                <div class="quiz-content" id="quizContent"></div>
+                <button class="submit-btn" onclick="submitQuiz()">Submit Quiz</button>
+                <button class="close-btn" onclick="closeQuiz()">Close</button>
+                <div class="result-container" id="resultContainer">
+                    <p class="result-text" id="resultText"></p>
+                    <p class="result-score" id="resultScore"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        Crafted with brilliance by <a href="https://wa.me/+2348128197651" target="_blank">Sisco Ask</a> | Powered by Alade Omotayo David, CEO of Kings Farms and Foods | © <span id="footer-year"></span> Animal Science Universe
+    </footer>
+
+    <script>
+      const quizQuestions = {
+            'animal-biotechnology': {
+                title: 'Animal Biotechnology Quiz',
+                questions: [
+                    {
+                        question: 'What is the primary goal of animal biotechnology?',
+                        options: ['Enhancing crop yield', 'Improving animal traits', 'Reducing water usage', 'Increasing soil fertility'],
+                        answer: 'Improving animal traits'
+                    },
+                    {
+                        question: 'Which technique was used to clone Dolly the sheep?',
+                        options: ['CRISPR-Cas9', 'Somatic cell nuclear transfer', 'Embryo transfer', 'RNA interference'],
+                        answer: 'Somatic cell nuclear transfer'
+                    },
+                    {
+                        question: 'What is CRISPR-Cas9 primarily used for in animal biotechnology?',
+                        options: ['Cloning', 'Gene editing', 'Vaccine production', 'Feed formulation'],
+                        answer: 'Gene editing'
+                    },
+                    {
+                        question: 'Which animal was the first to be cloned?',
+                        options: ['Cow', 'Sheep', 'Pig', 'Horse'],
+                        answer: 'Sheep'
+                    },
+                    {
+                        question: 'What is a key ethical concern in animal biotechnology?',
+                        options: ['Cost of equipment', 'Animal welfare', 'Soil degradation', 'Water scarcity'],
+                        answer: 'Animal welfare'
+                    },
+                    {
+                        question: 'Which technology enhances vaccine development in animals?',
+                        options: ['Genomics', 'Cloning', 'Transgenesis', 'RNA sequencing'],
+                        answer: 'Genomics'
+                    },
+                    {
+                        question: 'What is the purpose of gene knockout in animals?',
+                        options: ['Enhance growth', 'Study gene function', 'Increase fertility', 'Improve taste'],
+                        answer: 'Study gene function'
+                    },
+                    {
+                        question: 'Which animal has been genetically modified to produce human proteins in milk?',
+                        options: ['Cow', 'Goat', 'Pig', 'Chicken'],
+                        answer: 'Goat'
+                    },
+                    {
+                        question: 'What reduces methane emissions in cattle through biotechnology?',
+                        options: ['Gene silencing', 'Feed additives', 'Cloning', 'Embryo transfer'],
+                        answer: 'Gene silencing'
+                    },
+                    {
+                        question: 'What is a common application of transgenesis in animals?',
+                        options: ['Disease resistance', 'Soil improvement', 'Water purification', 'Crop growth'],
+                        answer: 'Disease resistance'
+                    },
+                    // Add 40 more questions to reach 50
+                    {
+                        question: 'What is the role of RNA interference in animal biotechnology?',
+                        options: ['Enhance muscle growth', 'Silence specific genes', 'Increase milk yield', 'Improve digestion'],
+                        answer: 'Silence specific genes'
+                    },
+                    {
+                        question: 'Which biotechnology tool maps animal genomes?',
+                        options: ['CRISPR', 'Genomics', 'Cloning', 'Embryo transfer'],
+                        answer: 'Genomics'
+                    },
+                    {
+                        question: 'What is a benefit of cloning in conservation?',
+                        options: ['Increased crop yield', 'Preserving endangered species', 'Soil fertility', 'Water conservation'],
+                        answer: 'Preserving endangered species'
+                    },
+                    {
+                        question: 'Which animal was approved for fast growth using biotechnology?',
+                        options: ['Salmon', 'Cow', 'Chicken', 'Pig'],
+                        answer: 'Salmon'
+                    },
+                    {
+                        question: 'What is a challenge in animal biotechnology regulation?',
+                        options: ['High costs', 'Public acceptance', 'Both A and B', 'Neither A nor B'],
+                        answer: 'Both A and B'
+                    },
+                    {
+                        question: 'What is the purpose of embryo transfer in biotechnology?',
+                        options: ['Increase genetic diversity', 'Multiply elite offspring', 'Reduce feed costs', 'Improve soil health'],
+                        answer: 'Multiply elite offspring'
+                    },
+                    {
+                        question: 'Which biotech method produces pharmaceuticals in animal milk?',
+                        options: ['Transgenesis', 'Cloning', 'Gene knockout', 'CRISPR'],
+                        answer: 'Transgenesis'
+                    },
+                    {
+                        question: 'What is a key focus of animal biotechnology in agriculture?',
+                        options: ['Improving feed efficiency', 'Increasing water usage', 'Reducing crop yield', 'Enhancing soil erosion'],
+                        answer: 'Improving feed efficiency'
+                    },
+                    {
+                        question: 'Which gene-editing tool is most precise?',
+                        options: ['RNA interference', 'CRISPR-Cas9', 'Cloning', 'Embryo transfer'],
+                        answer: 'CRISPR-Cas9'
+                    },
+                    {
+                        question: 'What is a byproduct of animal biotechnology in medicine?',
+                        options: ['Antithrombin in goat milk', 'Insulin in crops', 'Vaccine in soil', 'Antibiotics in water'],
+                        answer: 'Antithrombin in goat milk'
+                    },
+                    {
+                        question: 'What reduces PRRS in pigs using biotechnology?',
+                        options: ['CRISPR', 'Vaccines', 'Feed additives', 'Cloning'],
+                        answer: 'CRISPR'
+                    },
+                    {
+                        question: 'Which biotech method studies gene function by disabling genes?',
+                        options: ['Gene knockout', 'Transgenesis', 'Cloning', 'RNA interference'],
+                        answer: 'Gene knockout'
+                    },
+                    {
+                        question: 'What is a common use of genomics in animal biotechnology?',
+                        options: ['Soil testing', 'Trait identification', 'Water purification', 'Crop growth'],
+                        answer: 'Trait identification'
+                    },
+                    {
+                        question: 'Which animal is used for spider silk protein production?',
+                        options: ['Cow', 'Goat', 'Pig', 'Sheep'],
+                        answer: 'Goat'
+                    },
+                    {
+                        question: 'What is a goal of animal biotechnology in conservation?',
+                        options: ['Increase crop yield', 'Preserve genetic diversity', 'Reduce water use', 'Enhance soil fertility'],
+                        answer: 'Preserve genetic diversity'
+                    },
+                    {
+                        question: 'Which biotech tool amplifies specific genes?',
+                        options: ['Gene cloning', 'CRISPR', 'Embryo transfer', 'RNA interference'],
+                        answer: 'Gene cloning'
+                    },
+                    {
+                        question: 'What is a limitation of animal biotechnology?',
+                        options: ['Low cost', 'High investment', 'No regulation', 'No ethical concerns'],
+                        answer: 'High investment'
+                    },
+                    {
+                        question: 'Which disease-resistant animal was created using CRISPR?',
+                        options: ['Cow', 'Pig', 'Chicken', 'Horse'],
+                        answer: 'Pig'
+                    },
+                    {
+                        question: 'What is a benefit of biotech in animal health?',
+                        options: ['Increased water usage', 'Improved vaccine development', 'Reduced crop yield', 'Soil degradation'],
+                        answer: 'Improved vaccine development'
+                    },
+                    {
+                        question: 'Which biotech method introduces foreign genes?',
+                        options: ['Transgenesis', 'Cloning', 'Gene knockout', 'CRISPR'],
+                        answer: 'Transgenesis'
+                    },
+                    {
+                        question: 'What is a common environmental application of animal biotechnology?',
+                        options: ['Methane reduction', 'Soil erosion', 'Water contamination', 'Crop failure'],
+                        answer: 'Methane reduction'
+                    },
+                    {
+                        question: 'Which animal is used for insulin production in biotechnology?',
+                        options: ['Pig', 'Cow', 'Sheep', 'Chicken'],
+                        answer: 'Pig'
+                    },
+                    {
+                        question: 'What is a key challenge in public perception of animal biotechnology?',
+                        options: ['Cost reduction', 'Safety concerns', 'Increased yield', 'Soil health'],
+                        answer: 'Safety concerns'
+                    },
+                    {
+                        question: 'Which biotech tool enhances wool quality in sheep?',
+                        options: ['CRISPR', 'Cloning', 'Embryo transfer', 'RNA interference'],
+                        answer: 'CRISPR'
+                    },
+                    {
+                        question: 'What is a benefit of gene cloning in animals?',
+                        options: ['Soil improvement', 'Trait amplification', 'Water purification', 'Crop growth'],
+                        answer: 'Trait amplification'
+                    },
+                    {
+                        question: 'Which animal is used for antithrombin production?',
+                        options: ['Goat', 'Cow', 'Pig', 'Sheep'],
+                        answer: 'Goat'
+                    },
+                    {
+                        question: 'What is a goal of animal biotechnology in agriculture?',
+                        options: ['Reduce crop yield', 'Enhance productivity', 'Increase water use', 'Soil degradation'],
+                        answer: 'Enhance productivity'
+                    },
+                    {
+                        question: 'Which biotech method reduces disease susceptibility?',
+                        options: ['RNA interference', 'Cloning', 'Embryo transfer', 'Genomics'],
+                        answer: 'RNA interference'
+                    },
+                    {
+                        question: 'What is a common use of embryo transfer in biotechnology?',
+                        options: ['Increase genetic diversity', 'Multiply elite offspring', 'Reduce feed costs', 'Improve soil health'],
+                        answer: 'Multiply elite offspring'
+                    },
+                    {
+                        question: 'Which animal was genetically modified for hornless traits?',
+                        options: ['Cow', 'Sheep', 'Pig', 'Goat'],
+                        answer: 'Cow'
+                    },
+                    {
+                        question: 'What is a benefit of animal biotechnology in medicine?',
+                        options: ['Soil fertility', 'Pharmaceutical production', 'Water conservation', 'Crop yield'],
+                        answer: 'Pharmaceutical production'
+                    },
+                    {
+                        question: 'Which biotech tool is used for genetic banking?',
+                        options: ['Cloning', 'CRISPR', 'Genomics', 'RNA interference'],
+                        answer: 'Cloning'
+                    },
+                    {
+                        question: 'What is a challenge in animal biotechnology adoption?',
+                        options: ['Low cost', 'Regulatory hurdles', 'No ethical issues', 'High public acceptance'],
+                        answer: 'Regulatory hurdles'
+                    },
+                    {
+                        question: 'Which animal is used for fast-growing biotech traits?',
+                        options: ['Salmon', 'Cow', 'Chicken', 'Pig'],
+                        answer: 'Salmon'
+                    },
+                    {
+                        question: 'What is a key focus of animal biotechnology in sustainability?',
+                        options: ['Increase water use', 'Reduce environmental impact', 'Enhance soil erosion', 'Reduce crop yield'],
+                        answer: 'Reduce environmental impact'
+                    },
+                    {
+                        question: 'Which biotech method enhances feed efficiency?',
+                        options: ['Genomics', 'Cloning', 'Embryo transfer', 'RNA interference'],
+                        answer: 'Genomics'
+                    },
+                    {
+                        question: 'What is a common application of animal biotechnology in conservation?',
+                        options: ['Soil testing', 'Genetic banking', 'Water purification', 'Crop growth'],
+                        answer: 'Genetic banking'
+                    }
+                ]
+            },
+    'animal-breeding-genetics': {
+        title: 'Animal Breeding and Genetics Quiz',
+        questions: [
+            {
+                question: 'What is selective breeding?',
+                options: ['Random mating', 'Breeding for desired traits', 'Cross-species breeding', 'Genetic cloning'],
+                answer: 'Breeding for desired traits'
+            },
+            {
+                question: 'What is the basic unit of heredity in animals?',
+                options: ['Chromosome', 'Gene', 'Allele', 'Nucleotide'],
+                answer: 'Gene'
+            },
+            {
+                question: 'What does the term "heritability" refer to in animal breeding?',
+                options: ['The ability to reproduce', 'The proportion of phenotypic variation due to genetics', 'The rate of mutation', 'The size of the genome'],
+                answer: 'The proportion of phenotypic variation due to genetics'
+            },
+            {
+                question: 'Which law describes the segregation of alleles during gamete formation?',
+                options: ['Law of Dominance', 'Law of Segregation', 'Law of Independent Assortment', 'Law of Genetic Drift'],
+                answer: 'Law of Segregation'
+            },
+            {
+                question: 'What is a dominant allele?',
+                options: ['An allele that is always expressed', 'An allele that is never expressed', 'An allele with no effect', 'An allele that mutates frequently'],
+                answer: 'An allele that is always expressed'
+            },
+            {
+                question: 'What is inbreeding in animal breeding?',
+                options: ['Mating unrelated individuals', 'Mating closely related individuals', 'Crossbreeding different species', 'Cloning animals'],
+                answer: 'Mating closely related individuals'
+            },
+            {
+                question: 'What is the purpose of crossbreeding?',
+                options: ['To reduce genetic diversity', 'To combine desirable traits from different breeds', 'To eliminate mutations', 'To increase inbreeding'],
+                answer: 'To combine desirable traits from different breeds'
+            },
+            {
+                question: 'What is a phenotype in genetics?',
+                options: ['The genetic makeup of an organism', 'The physical expression of traits', 'The number of chromosomes', 'The mutation rate'],
+                answer: 'The physical expression of traits'
+            },
+            {
+                question: 'What is a genotype?',
+                options: ['The observable traits', 'The genetic constitution of an organism', 'The environment of the animal', 'The breeding method'],
+                answer: 'The genetic constitution of an organism'
+            },
+            {
+                question: 'What is hybrid vigor?',
+                options: ['Reduced performance in hybrids', 'Enhanced traits in crossbred offspring', 'Genetic mutations', 'Inbreeding depression'],
+                answer: 'Enhanced traits in crossbred offspring'
+            },
+            {
+                question: 'Which tool is used to predict inheritance patterns?',
+                options: ['Punnett Square', 'Pedigree Chart', 'Karyotype', 'DNA Sequencer'],
+                answer: 'Punnett Square'
+            },
+            {
+                question: 'What is genetic drift?',
+                options: ['Random changes in allele frequencies', 'Selective breeding', 'Crossbreeding', 'Gene editing'],
+                answer: 'Random changes in allele frequencies'
+            },
+            {
+                question: 'What is the role of a pedigree chart in breeding?',
+                options: ['To map weather patterns', 'To track inheritance of traits', 'To measure animal growth', 'To analyze feed efficiency'],
+                answer: 'To track inheritance of traits'
+            },
+            {
+                question: 'What is quantitative genetics concerned with?',
+                options: ['Single gene traits', 'Traits influenced by multiple genes', 'Environmental traits', 'Non-genetic traits'],
+                answer: 'Traits influenced by multiple genes'
+            },
+            {
+                question: 'What is a recessive allele?',
+                options: ['An allele expressed only when homozygous', 'An allele always expressed', 'An allele that mutates', 'An allele with no effect'],
+                answer: 'An allele expressed only when homozygous'
+            },
+            {
+                question: 'What is the primary goal of genomic selection?',
+                options: ['To increase mutation rates', 'To select animals based on DNA markers', 'To reduce genetic diversity', 'To clone animals'],
+                answer: 'To select animals based on DNA markers'
+            },
+            {
+                question: 'What does homozygous mean?',
+                options: ['Having two different alleles', 'Having two identical alleles', 'Having no alleles', 'Having multiple genes'],
+                answer: 'Having two identical alleles'
+            },
+            {
+                question: 'What does heterozygous mean?',
+                options: ['Having two identical alleles', 'Having two different alleles', 'Having no alleles', 'Having a single gene'],
+                answer: 'Having two different alleles'
+            },
+            {
+                question: 'What is a quantitative trait locus (QTL)?',
+                options: ['A specific gene mutation', 'A region of DNA affecting a trait', 'A type of chromosome', 'A breeding technique'],
+                answer: 'A region of DNA affecting a trait'
+            },
+            {
+                question: 'What is the purpose of artificial insemination in breeding?',
+                options: ['To reduce genetic diversity', 'To introduce new genes', 'To improve breeding efficiency', 'To clone animals'],
+                answer: 'To improve breeding efficiency'
+            },
+            {
+                question: 'What is inbreeding depression?',
+                options: ['Improved performance in inbred animals', 'Reduced fitness due to inbreeding', 'Increased genetic diversity', 'Enhanced traits in hybrids'],
+                answer: 'Reduced fitness due to inbreeding'
+            },
+            {
+                question: 'What is a polygenic trait?',
+                options: ['A trait controlled by one gene', 'A trait controlled by multiple genes', 'A trait unaffected by genes', 'A trait caused by mutations'],
+                answer: 'A trait controlled by multiple genes'
+            },
+            {
+                question: 'What is the function of a breeding value?',
+                options: ['To measure feed intake', 'To estimate genetic merit', 'To count chromosomes', 'To assess environmental impact'],
+                answer: 'To estimate genetic merit'
+            },
+            {
+                question: 'What is epistasis in genetics?',
+                options: ['Interaction between genes', 'Single gene expression', 'Environmental influence', 'Chromosome duplication'],
+                answer: 'Interaction between genes'
+            },
+            {
+                question: 'What is a marker-assisted selection?',
+                options: ['Selecting animals by physical traits', 'Using DNA markers to select traits', 'Random mating', 'Cloning animals'],
+                answer: 'Using DNA markers to select traits'
+            },
+            {
+                question: 'What is the Hardy-Weinberg equilibrium?',
+                options: ['A state of no genetic change', 'A breeding technique', 'A type of mutation', 'A selection method'],
+                answer: 'A state of no genetic change'
+            },
+            {
+                question: 'What is a chromosome?',
+                options: ['A single gene', 'A structure carrying DNA', 'A type of protein', 'A breeding tool'],
+                answer: 'A structure carrying DNA'
+            },
+            {
+                question: 'What is the purpose of embryo transfer in breeding?',
+                options: ['To increase genetic mutations', 'To produce multiple offspring from elite females', 'To reduce fertility', 'To clone animals'],
+                answer: 'To produce multiple offspring from elite females'
+            },
+            {
+                question: 'What is a genetic marker?',
+                options: ['A physical trait', 'A DNA sequence used to identify genes', 'A type of chromosome', 'A breeding record'],
+                answer: 'A DNA sequence used to identify genes'
+            },
+            {
+                question: 'What is outbreeding?',
+                options: ['Mating closely related individuals', 'Mating unrelated individuals', 'Cloning animals', 'Gene editing'],
+                answer: 'Mating unrelated individuals'
+            },
+            {
+                question: 'What is a mutation in genetics?',
+                options: ['A change in DNA sequence', 'A breeding technique', 'A type of selection', 'A physical trait'],
+                answer: 'A change in DNA sequence'
+            },
+            {
+                question: 'What is the role of DNA in animal breeding?',
+                options: ['To provide energy', 'To carry genetic information', 'To regulate temperature', 'To improve feed efficiency'],
+                answer: 'To carry genetic information'
+            },
+            {
+                question: 'What is genetic variation?',
+                options: ['Uniform traits in a population', 'Differences in DNA among individuals', 'Environmental changes', 'Cloning techniques'],
+                answer: 'Differences in DNA among individuals'
+            },
+            {
+                question: 'What is a haploid cell?',
+                options: ['A cell with one set of chromosomes', 'A cell with two sets of chromosomes', 'A cell with no chromosomes', 'A cell with multiple genes'],
+                answer: 'A cell with one set of chromosomes'
+            },
+            {
+                question: 'What is a diploid cell?',
+                options: ['A cell with one set of chromosomes', 'A cell with two sets of chromosomes', 'A cell with no chromosomes', 'A cell with mutations'],
+                answer: 'A cell with two sets of chromosomes'
+            },
+            {
+                question: 'What is the purpose of a breeding program?',
+                options: ['To reduce genetic diversity', 'To improve specific traits', 'To increase mutations', 'To clone animals'],
+                answer: 'To improve specific traits'
+            },
+            {
+                question: 'What is a genetic bottleneck?',
+                options: ['A reduction in genetic diversity', 'An increase in genetic diversity', 'A breeding technique', 'A type of mutation'],
+                answer: 'A reduction in genetic diversity'
+            },
+            {
+                question: 'What is the role of selection intensity in breeding?',
+                options: ['To measure feed efficiency', 'To determine the strength of selection', 'To count chromosomes', 'To assess mutations'],
+                answer: 'To determine the strength of selection'
+            },
+            {
+                question: 'What is a monohybrid cross?',
+                options: ['A cross involving one trait', 'A cross involving two traits', 'A cross involving multiple species', 'A cross with no traits'],
+                answer: 'A cross involving one trait'
+            },
+            {
+                question: 'What is a dihybrid cross?',
+                options: ['A cross involving one trait', 'A cross involving two traits', 'A cross involving multiple species', 'A cross with no traits'],
+                answer: 'A cross involving two traits'
+            },
+            {
+                question: 'What is gene flow in populations?',
+                options: ['Movement of genes between populations', 'Mutation of genes', 'Selection of genes', 'Cloning of genes'],
+                answer: 'Movement of genes between populations'
+            },
+            {
+                question: 'What is the purpose of genetic screening in breeding?',
+                options: ['To identify desirable genes', 'To increase mutations', 'To reduce fertility', 'To measure growth rate'],
+                answer: 'To identify desirable genes'
+            },
+            {
+                question: 'What is a transgenic animal?',
+                options: ['An animal with no genes', 'An animal with foreign DNA', 'An animal with cloned DNA', 'An animal with mutated genes'],
+                answer: 'An animal with foreign DNA'
+            },
+            {
+                question: 'What is the founder effect in genetics?',
+                options: ['A loss of genetic variation in a new population', 'An increase in genetic variation', 'A breeding technique', 'A type of selection'],
+                answer: 'A loss of genetic variation in a new population'
+            },
+            {
+                question: 'What is a genome?',
+                options: ['A single gene', 'The complete set of DNA', 'A type of chromosome', 'A breeding record'],
+                answer: 'The complete set of DNA'
+            },
+            {
+                question: 'What is the purpose of backcrossing?',
+                options: ['To introduce new traits', 'To recover the parent’s genotype', 'To reduce genetic diversity', 'To clone animals'],
+                answer: 'To recover the parent’s genotype'
+            },
+            {
+                question: 'What is a linkage map?',
+                options: ['A map of physical traits', 'A map of gene locations on a chromosome', 'A map of breeding locations', 'A map of mutations'],
+                answer: 'A map of gene locations on a chromosome'
+            },
+            {
+                question: 'What is the role of additive genetic variance?',
+                options: ['To cause mutations', 'To contribute to trait inheritance', 'To reduce genetic diversity', 'To increase environmental impact'],
+                answer: 'To contribute to trait inheritance'
+            },
+            {
+                question: 'What is a sex-linked trait?',
+                options: ['A trait on autosomes', 'A trait on sex chromosomes', 'A trait unaffected by genes', 'A trait caused by the environment'],
+                answer: 'A trait on sex chromosomes'
+            },
+            {
+                question: 'What is the goal of line breeding?',
+                options: ['To maintain specific traits', 'To increase mutations', 'To reduce fertility', 'To clone animals'],
+                answer: 'To maintain specific traits'
+            }
+        ]
+    },
+    // Add similar question sets for other topics (50 questions each)
+    'animal-biochemistry-nutrition': {
+        title: 'Animal Biochemistry and Nutrition Quiz',
+        questions: [
+            {
+                "question": "What is the primary source of energy in animal diets?",
+                "options": ["Vitamins", "Carbohydrates", "Minerals", "Water"],
+                "answer": "Carbohydrates"
+            },
+            {
+                "question": "Which nutrient is essential for bone health in animals?",
+                "options": ["Vitamin D", "Vitamin C", "Iron", "Fiber"],
+                "answer": "Vitamin D"
+            },
+            {
+                "question": "What is the energy content of dairy cow feed?",
+                "options": ["1.5 Mcal/kg", "2.5 Mcal/kg", "3.5 Mcal/kg", "4.5 Mcal/kg"],
+                "answer": "3.5 Mcal/kg"
+            },
+            {
+                "question": "Which process produces volatile fatty acids in ruminants?",
+                "options": ["Glycolysis", "Rumen fermentation", "Krebs cycle", "Beta-oxidation"],
+                "answer": "Rumen fermentation"
+            },
+            {
+                "question": "What is the protein requirement for growing pigs?",
+                "options": ["8%", "12%", "18%", "24%"],
+                "answer": "18%"
+            },
+            {
+                "question": "Which vitamin is critical for blood clotting in animals?",
+                "options": ["Vitamin A", "Vitamin K", "Vitamin E", "Vitamin B12"],
+                "answer": "Vitamin K"
+            },
+            {
+                "question": "What is the primary function of lipids in animal diets?",
+                "options": ["Energy storage", "Enzyme production", "Bone formation", "Water retention"],
+                "answer": "Energy storage"
+            },
+            {
+                "question": "Which mineral is essential for hemoglobin formation in animals?",
+                "options": ["Calcium", "Iron", "Magnesium", "Potassium"],
+                "answer": "Iron"
+            },
+            {
+                "question": "What is the main source of fiber in ruminant diets?",
+                "options": ["Grains", "Forages", "Concentrates", "Supplements"],
+                "answer": "Forages"
+            },
+            {
+                "question": "Which amino acid is considered essential for cats?",
+                "options": ["Taurine", "Glycine", "Alanine", "Proline"],
+                "answer": "Taurine"
+            },
+            {
+                "question": "What is the approximate metabolizable energy of corn for poultry?",
+                "options": ["2.5 Mcal/kg", "3.3 Mcal/kg", "4.0 Mcal/kg", "5.0 Mcal/kg"],
+                "answer": "3.3 Mcal/kg"
+            },
+            {
+                "question": "Which nutrient deficiency causes rickets in young animals?",
+                "options": ["Vitamin A", "Vitamin D", "Vitamin E", "Vitamin C"],
+                "answer": "Vitamin D"
+            },
+            {
+                "question": "What is the primary carbohydrate in milk?",
+                "options": ["Glucose", "Fructose", "Lactose", "Sucrose"],
+                "answer": "Lactose"
+            },
+            {
+                "question": "Which enzyme breaks down starch in the small intestine of animals?",
+                "options": ["Amylase", "Lipase", "Protease", "Cellulase"],
+                "answer": "Amylase"
+            },
+            {
+                "question": "What is the main source of energy for ruminants from rumen fermentation?",
+                "options": ["Amino acids", "Volatile fatty acids", "Sugars", "Lipids"],
+                "answer": "Volatile fatty acids"
+            },
+            {
+                "question": "Which nutrient supports immune function in animals?",
+                "options": ["Vitamin C", "Calcium", "Fiber", "Sodium"],
+                "answer": "Vitamin C"
+            },
+            {
+                "question": "What is the crude protein content of soybean meal for livestock feed?",
+                "options": ["20%", "30%", "44%", "60%"],
+                "answer": "44%"
+            },
+            {
+                "question": "Which vitamin deficiency causes night blindness in animals?",
+                "options": ["Vitamin A", "Vitamin B1", "Vitamin C", "Vitamin D"],
+                "answer": "Vitamin A"
+            },
+            {
+                "question": "What is the primary function of phosphorus in animal nutrition?",
+                "options": ["Energy production", "Bone development", "Muscle contraction", "Blood clotting"],
+                "answer": "Bone development"
+            },
+            {
+                "question": "Which feed additive improves protein digestion in poultry?",
+                "options": ["Probiotics", "Antibiotics", "Enzymes", "Hormones"],
+                "answer": "Enzymes"
+            },
+            {
+                "question": "What is the main source of omega-3 fatty acids in animal diets?",
+                "options": ["Fish oil", "Corn oil", "Soybean oil", "Palm oil"],
+                "answer": "Fish oil"
+            },
+            {
+                "question": "Which nutrient is critical for eggshell formation in laying hens?",
+                "options": ["Calcium", "Iron", "Zinc", "Magnesium"],
+                "answer": "Calcium"
+            },
+            {
+                "question": "What is the approximate water intake for a dairy cow per day?",
+                "options": ["20 L", "50 L", "100 L", "150 L"],
+                "answer": "100 L"
+            },
+            {
+                "question": "Which carbohydrate is indigestible by monogastric animals?",
+                "options": ["Starch", "Cellulose", "Glucose", "Maltose"],
+                "answer": "Cellulose"
+            },
+            {
+                "question": "What is the role of vitamin E in animal nutrition?",
+                "options": ["Antioxidant", "Bone growth", "Blood clotting", "Energy production"],
+                "answer": "Antioxidant"
+            },
+            {
+                "question": "Which mineral is critical for thyroid function in animals?",
+                "options": ["Iodine", "Zinc", "Selenium", "Copper"],
+                "answer": "Iodine"
+            },
+            {
+                "question": "What is the energy content of barley for swine?",
+                "options": ["2.8 Mcal/kg", "3.2 Mcal/kg", "3.8 Mcal/kg", "4.2 Mcal/kg"],
+                "answer": "3.2 Mcal/kg"
+            },
+            {
+                "question": "Which nutrient deficiency causes scurvy in animals?",
+                "options": ["Vitamin A", "Vitamin B12", "Vitamin C", "Vitamin D"],
+                "answer": "Vitamin C"
+            },
+            {
+                "question": "What is the primary source of energy for newborn mammals?",
+                "options": ["Protein", "Fat", "Carbohydrates", "Fiber"],
+                "answer": "Fat"
+            },
+            {
+                "question": "Which process converts dietary protein into body protein in animals?",
+                "options": ["Lipogenesis", "Gluconeogenesis", "Protein synthesis", "Glycogenolysis"],
+                "answer": "Protein synthesis"
+            },
+            {
+                "question": "What is the main function of zinc in animal diets?",
+                "options": ["Enzyme function", "Bone formation", "Energy storage", "Water retention"],
+                "answer": "Enzyme function"
+            },
+            {
+                "question": "Which feed ingredient is high in bypass protein for ruminants?",
+                "options": ["Corn", "Fish meal", "Wheat", "Alfalfa"],
+                "answer": "Fish meal"
+            },
+            {
+                "question": "What is the role of magnesium in animal nutrition?",
+                "options": ["Muscle function", "Blood clotting", "Energy storage", "Bone density"],
+                "answer": "Muscle function"
+            },
+            {
+                "question": "Which vitamin is synthesized in the rumen of cattle?",
+                "options": ["Vitamin A", "Vitamin B12", "Vitamin D", "Vitamin E"],
+                "answer": "Vitamin B12"
+            },
+            {
+                "question": "What is the approximate digestible energy of wheat for poultry?",
+                "options": ["2.5 Mcal/kg", "3.0 Mcal/kg", "3.5 Mcal/kg", "4.0 Mcal/kg"],
+                "answer": "3.5 Mcal/kg"
+            },
+            {
+                "question": "Which nutrient supports feather growth in poultry?",
+                "options": ["Sulfur", "Calcium", "Iron", "Potassium"],
+                "answer": "Sulfur"
+            },
+            {
+                "question": "What is the primary source of vitamin B12 in animal diets?",
+                "options": ["Plants", "Animal products", "Grains", "Water"],
+                "answer": "Animal products"
+            },
+            {
+                "question": "Which nutrient deficiency causes goiter in animals?",
+                "options": ["Iodine", "Calcium", "Iron", "Zinc"],
+                "answer": "Iodine"
+            },
+            {
+                "question": "What is the main source of energy for horses?",
+                "options": ["Protein", "Fat", "Carbohydrates", "Minerals"],
+                "answer": "Carbohydrates"
+            },
+            {
+                "question": "Which enzyme breaks down fats in the small intestine?",
+                "options": ["Amylase", "Lipase", "Protease", "Cellulase"],
+                "answer": "Lipase"
+            },
+            {
+                "question": "What is the role of selenium in animal nutrition?",
+                "options": ["Antioxidant", "Bone growth", "Blood clotting", "Energy production"],
+                "answer": "Antioxidant"
+            },
+            {
+                "question": "Which nutrient is critical for milk production in dairy cows?",
+                "options": ["Calcium", "Iron", "Zinc", "Magnesium"],
+                "answer": "Calcium"
+            },
+            {
+                "question": "What is the approximate protein requirement for laying hens?",
+                "options": ["10%", "15%", "20%", "25%"],
+                "answer": "15%"
+            },
+            {
+                "question": "Which vitamin supports vision in animals?",
+                "options": ["Vitamin A", "Vitamin B1", "Vitamin C", "Vitamin D"],
+                "answer": "Vitamin A"
+            },
+            {
+                "question": "What is the primary source of energy for ruminants?",
+                "options": ["Protein", "Fat", "Carbohydrates", "Minerals"],
+                "answer": "Carbohydrates"
+            },
+            {
+                "question": "Which nutrient is essential for muscle growth in animals?",
+                "options": ["Protein", "Carbohydrates", "Fat", "Fiber"],
+                "answer": "Protein"
+            },
+            {
+                "question": "What is the main function of potassium in animal diets?",
+                "options": ["Electrolyte balance", "Bone formation", "Energy storage", "Blood clotting"],
+                "answer": "Electrolyte balance"
+            },
+            {
+                "question": "Which feed ingredient is high in fiber for ruminants?",
+                "options": ["Corn", "Hay", "Soybean meal", "Fish meal"],
+                "answer": "Hay"
+            },
+            {
+                "question": "What is the role of vitamin B1 in animal nutrition?",
+                "options": ["Nerve function", "Bone growth", "Blood clotting", "Energy storage"],
+                "answer": "Nerve function"
+            },
+            {
+                "question": "Which nutrient supports reproductive health in animals?",
+                "options": ["Vitamin E", "Calcium", "Iron", "Fiber"],
+                "answer": "Vitamin E"
+            },
+            {
+                "question": "What is the approximate energy requirement for a broiler chicken?",
+                "options": ["2.5 Mcal/kg", "3.0 Mcal/kg", "3.5 Mcal/kg", "4.0 Mcal/kg"],
+                "answer": "3.0 Mcal/kg"
+            }
+        ]
+    },
+    "animal-production-management": {
+        "title": "Animal Production and Management Quiz",
+        "questions": [
+            {
+                "question": "What is a key focus of animal production management?",
+                "options": ["Soil fertility", "Sustainable livestock systems", "Crop yield", "Water purification"],
+                "answer": "Sustainable livestock systems"
+            },
+            {
+                "question": "What percentage of production costs is feed in livestock farming?",
+                "options": ["20-30%", "40-50%", "60-70%", "80-90%"],
+                "answer": "60-70%"
+            },
+            {
+                "question": "Which system improves dairy efficiency by 30%?",
+                "options": ["Free-range", "Automated milking parlors", "Feedlots", "Battery cages"],
+                "answer": "Automated milking parlors"
+            },
+            {
+                "question": "What is a benefit of composting manure in livestock management?",
+                "options": ["50% reduction in nitrogen runoff", "Increased water usage", "Soil erosion", "Crop failure"],
+                "answer": "50% reduction in nitrogen runoff"
+            },
+            {
+                "question": "Which technology monitors livestock health in production?",
+                "options": ["IoT", "CRISPR", "RNA interference", "Genomics"],
+                "answer": "IoT"
+            },
+            {
+                "question": "What is the average gestation period for dairy cows?",
+                "options": ["6 months", "9 months", "12 months", "15 months"],
+                "answer": "9 months"
+            },
+            {
+                "question": "Which housing system reduces stress in poultry?",
+                "options": ["Battery cages", "Free-range", "Feedlots", "Stalls"],
+                "answer": "Free-range"
+            },
+            {
+                "question": "What is the optimal temperature for broiler chickens?",
+                "options": ["15°C", "25°C", "35°C", "45°C"],
+                "answer": "25°C"
+            },
+            {
+                "question": "Which practice improves feed efficiency in pigs?",
+                "options": ["Group housing", "Overfeeding", "Restricted feeding", "No bedding"],
+                "answer": "Restricted feeding"
+            },
+            {
+                "question": "What is the benefit of crossbreeding in livestock?",
+                "options": ["Reduced genetic diversity", "Hybrid vigor", "Increased disease", "Lower productivity"],
+                "answer": "Hybrid vigor"
+            },
+            {
+                "question": "What is the average milk yield of a Holstein cow per day?",
+                "options": ["10 L", "20 L", "30 L", "40 L"],
+                "answer": "30 L"
+            },
+            {
+                "question": "Which system reduces labor costs in dairy farming?",
+                "options": ["Manual milking", "Robotic milking", "Hand feeding", "Open grazing"],
+                "answer": "Robotic milking"
+            },
+            {
+                "question": "What is the main purpose of dehorning in cattle?",
+                "options": ["Increase milk yield", "Reduce injury", "Improve feed intake", "Enhance fertility"],
+                "answer": "Reduce injury"
+            },
+            {
+                "question": "Which bedding material improves cow comfort?",
+                "options": ["Straw", "Concrete", "Gravel", "Plastic"],
+                "answer": "Straw"
+            },
+            {
+                "question": "What is the average lifespan of a dairy cow?",
+                "options": ["5 years", "10 years", "15 years", "20 years"],
+                "answer": "10 years"
+            },
+            {
+                "question": "Which practice reduces methane emissions in cattle?",
+                "options": ["High-grain diet", "Low-fiber diet", "Silage feeding", "Grass-based diet"],
+                "answer": "Grass-based diet"
+            },
+            {
+                "question": "What is the main benefit of rotational grazing in livestock management?",
+                "options": ["Soil degradation", "Improved pasture growth", "Increased water use", "Reduced biodiversity"],
+                "answer": "Improved pasture growth"
+            },
+            {
+                "question": "Which technology improves feed distribution in barns?",
+                "options": ["Drones", "Automated feeders", "Tractors", "Manual carts"],
+                "answer": "Automated feeders"
+            },
+            {
+                "question": "What is the average weight gain of a feedlot steer per day?",
+                "options": ["0.5 kg", "1.0 kg", "1.5 kg", "2.0 kg"],
+                "answer": "1.5 kg"
+            },
+            {
+                "question": "Which factor improves egg production in layers?",
+                "options": ["High humidity", "Controlled lighting", "Low temperature", "No ventilation"],
+                "answer": "Controlled lighting"
+            },
+            {
+                "question": "What is the main purpose of a traceability system in livestock?",
+                "options": ["Increase feed costs", "Track animal movement", "Reduce fertility", "Decrease yield"],
+                "answer": "Track animal movement"
+            },
+            {
+                "question": "Which practice improves soil fertility in grazing systems?",
+                "options": ["Overgrazing", "Manure application", "Monoculture", "Deforestation"],
+                "answer": "Manure application"
+            },
+            {
+                "question": "What is the optimal stocking density for broiler chickens?",
+                "options": ["10 birds/m²", "20 birds/m²", "30 birds/m²", "40 birds/m²"],
+                "answer": "20 birds/m²"
+            },
+            {
+                "question": "Which system reduces disease spread in livestock?",
+                "options": ["Open housing", "Biosecure barns", "Overcrowding", "No ventilation"],
+                "answer": "Biosecure barns"
+            },
+            {
+                "question": "What is the main benefit of precision livestock farming?",
+                "options": ["Increased costs", "Improved efficiency", "Reduced yield", "Soil erosion"],
+                "answer": "Improved efficiency"
+            },
+            {
+                "question": "Which practice improves water quality in livestock farms?",
+                "options": ["Runoff management", "Overgrazing", "No fencing", "High stocking rates"],
+                "answer": "Runoff management"
+            },
+            {
+                "question": "What is the average weaning age for piglets?",
+                "options": ["2 weeks", "4 weeks", "6 weeks", "8 weeks"],
+                "answer": "4 weeks"
+            },
+            {
+                "question": "Which technology monitors milk quality in dairy farms?",
+                "options": ["Sensors", "Drones", "Tractors", "Manual testing"],
+                "answer": "Sensors"
+            },
+            {
+                "question": "What is the main purpose of culling in livestock management?",
+                "options": ["Increase herd size", "Improve herd health", "Reduce feed costs", "Decrease fertility"],
+                "answer": "Improve herd health"
+            },
+            {
+                "question": "Which practice reduces heat stress in dairy cows?",
+                "options": ["Fans and sprinklers", "No shade", "High stocking density", "Low ventilation"],
+                "answer": "Fans and sprinklers"
+            },
+            {
+                "question": "What is the average egg production per hen per year?",
+                "options": ["100 eggs", "200 eggs", "300 eggs", "400 eggs"],
+                "answer": "300 eggs"
+            },
+            {
+                "question": "Which system improves lamb survival rates?",
+                "options": ["Indoor housing", "Open grazing", "Overcrowding", "No bedding"],
+                "answer": "Indoor housing"
+            },
+            {
+                "question": "What is the main benefit of mixed-species grazing?",
+                "options": ["Reduced pasture use", "Improved parasite control", "Increased soil erosion", "Decreased yield"],
+                "answer": "Improved parasite control"
+            },
+            {
+                "question": "Which practice improves feed conversion in poultry?",
+                "options": ["High-fiber diet", "Balanced diet", "Overfeeding", "No supplements"],
+                "answer": "Balanced diet"
+            },
+            {
+                "question": "What is the main purpose of vaccination in livestock?",
+                "options": ["Increase feed costs", "Prevent disease", "Reduce fertility", "Decrease yield"],
+                "answer": "Prevent disease"
+            },
+            {
+                "question": "Which technology improves barn ventilation?",
+                "options": ["Fans", "Drones", "Tractors", "Manual vents"],
+                "answer": "Fans"
+            },
+            {
+                "question": "What is the average slaughter age for broiler chickens?",
+                "options": ["4 weeks", "6 weeks", "8 weeks", "10 weeks"],
+                "answer": "6 weeks"
+            },
+            {
+                "question": "Which practice improves milk fat content in dairy cows?",
+                "options": ["High-fiber diet", "Low-protein diet", "No supplements", "Overfeeding"],
+                "answer": "High-fiber diet"
+            },
+            {
+                "question": "What is the main benefit of shade in grazing systems?",
+                "options": ["Increased heat stress", "Reduced heat stress", "Soil erosion", "Water scarcity"],
+                "answer": "Reduced heat stress"
+            },
+            {
+                "question": "Which system reduces labor in poultry farming?",
+                "options": ["Manual feeding", "Automated feeding", "Open housing", "No bedding"],
+                "answer": "Automated feeding"
+            },
+            {
+                "question": "What is the average gestation period for pigs?",
+                "options": ["90 days", "114 days", "150 days", "180 days"],
+                "answer": "114 days"
+            },
+            {
+                "question": "Which practice improves pasture recovery in grazing systems?",
+                "options": ["Overgrazing", "Rotational grazing", "Continuous grazing", "No fencing"],
+                "answer": "Rotational grazing"
+            },
+            {
+                "question": "What is the main purpose of ear tagging in livestock?",
+                "options": ["Increase feed costs", "Animal identification", "Reduce fertility", "Decrease yield"],
+                "answer": "Animal identification"
+            },
+            {
+                "question": "Which technology improves water delivery in barns?",
+                "options": ["Automated drinkers", "Manual buckets", "Drones", "Tractors"],
+                "answer": "Automated drinkers"
+            },
+            {
+                "question": "What is the average weight of a market-ready pig?",
+                "options": ["50 kg", "100 kg", "120 kg", "150 kg"],
+                "answer": "120 kg"
+            },
+            {
+                "question": "Which practice improves fertility in dairy cows?",
+                "options": ["Balanced nutrition", "Overfeeding", "No supplements", "High stocking density"],
+                "answer": "Balanced nutrition"
+            },
+            {
+                "question": "What is the main benefit of automated egg collection in poultry?",
+                "options": ["Increased labor", "Reduced labor", "Soil erosion", "Water scarcity"],
+                "answer": "Reduced labor"
+            },
+            {
+                "question": "Which system improves biosecurity in livestock farms?",
+                "options": ["Open housing", "Controlled access", "Overcrowding", "No fencing"],
+                "answer": "Controlled access"
+            },
+            {
+                "question": "What is the main purpose of genetic selection in livestock?",
+                "options": ["Reduce productivity", "Improve traits", "Increase disease", "Decrease fertility"],
+                "answer": "Improve traits"
+            },
+            {
+                "question": "Which practice reduces ammonia emissions in barns?",
+                "options": ["Ventilation", "Overcrowding", "No bedding", "High humidity"],
+                "answer": "Ventilation"
+            },
+            {
+                "question": "What is the average milk production cycle for a dairy cow?",
+                "options": ["6 months", "12 months", "18 months", "24 months"],
+                "answer": "12 months"
+            }
+        ]
+    },
+    "animal-health-biosecurity": {
+        "title": "Animal Health and Biosecurity Quiz",
+        "questions": [
+            {
+                "question": "What is the efficacy of foot-and-mouth disease vaccines in cattle?",
+                "options": ["50%", "70%", "90%", "100%"],
+                "answer": "90%"
+            },
+            {
+                "question": "Which biosecurity measure reduces pathogen spread by 80%?",
+                "options": ["Vaccination", "Footbaths", "Quarantine", "Disinfection"],
+                "answer": "Footbaths"
+            },
+            {
+                "question": "What is used to control parasites in cattle?",
+                "options": ["Ivermectin", "Penicillin", "Aspirin", "Insulin"],
+                "answer": "Ivermectin"
+            },
+            {
+                "question": "What is the accuracy of PCR testing for avian influenza?",
+                "options": ["70%", "85%", "99%", "100%"],
+                "answer": "99%"
+            },
+            {
+                "question": "Which disease is transmissible to humans?",
+                "options": ["Brucellosis", "Foot rot", "Laminitis", "Ketosis"],
+                "answer": "Brucellosis"
+            },
+            {
+                "question": "What is the incubation period for bovine tuberculosis?",
+                "options": ["1-2 weeks", "3-6 weeks", "2-6 months", "1-2 years"],
+                "answer": "2-6 months"
+            },
+            {
+                "question": "Which biosecurity measure prevents avian influenza spread?",
+                "options": ["Open housing", "Netting over poultry", "No ventilation", "Overcrowding"],
+                "answer": "Netting over poultry"
+            },
+            {
+                "question": "What is the primary treatment for mastitis in dairy cows?",
+                "options": ["Antibiotics", "Vitamins", "Hormones", "Probiotics"],
+                "answer": "Antibiotics"
+            },
+            {
+                "question": "Which parasite causes significant weight loss in sheep?",
+                "options": ["Liver fluke", "Mange mite", "Ticks", "Fleas"],
+                "answer": "Liver fluke"
+            },
+            {
+                "question": "What is the quarantine period for new livestock arrivals?",
+                "options": ["1 week", "2 weeks", "3 weeks", "4 weeks"],
+                "answer": "4 weeks"
+            },
+            {
+                "question": "Which vaccine prevents clostridial diseases in cattle?",
+                "options": ["7-way vaccine", "Rabies vaccine", "Leptospirosis vaccine", "BVD vaccine"],
+                "answer": "7-way vaccine"
+            },
+            {
+                "question": "What is the main symptom of foot rot in sheep?",
+                "options": ["Lameness", "Fever", "Coughing", "Diarrhea"],
+                "answer": "Lameness"
+            },
+            {
+                "question": "Which biosecurity measure reduces Salmonella spread in poultry?",
+                "options": ["Open water sources", "Sanitized waterers", "No bedding", "Overcrowding"],
+                "answer": "Sanitized waterers"
+            },
+            {
+                "question": "What is the primary cause of bovine respiratory disease?",
+                "options": ["Bacteria", "Fungus", "Virus", "Parasite"],
+                "answer": "Virus"
+            },
+            {
+                "question": "Which diagnostic tool detects Johne’s disease in cattle?",
+                "options": ["Blood test", "Skin test", "Fecal test", "Urine test"],
+                "answer": "Fecal test"
+            },
+            {
+                "question": "What is the main vector for bluetongue disease in ruminants?",
+                "options": ["Mosquitoes", "Ticks", "Midges", "Fleas"],
+                "answer": "Midges"
+            },
+            {
+                "question": "Which biosecurity measure reduces E. coli spread in barns?",
+                "options": ["Dirty bedding", "Regular cleaning", "No ventilation", "Overcrowding"],
+                "answer": "Regular cleaning"
+            },
+            {
+                "question": "What is the treatment for coccidiosis in poultry?",
+                "options": ["Antibiotics", "Coccidiostats", "Hormones", "Vitamins"],
+                "answer": "Coccidiostats"
+            },
+            {
+                "question": "Which disease causes high mortality in young pigs?",
+                "options": ["Porcine reproductive and respiratory syndrome", "Foot rot", "Laminitis", "Ketosis"],
+                "answer": "Porcine reproductive and respiratory syndrome"
+            },
+            {
+                "question": "What is the efficacy of rabies vaccines in livestock?",
+                "options": ["70%", "80%", "90%", "100%"],
+                "answer": "100%"
+            },
+            {
+                "question": "Which biosecurity measure prevents disease introduction by visitors?",
+                "options": ["Open access", "Footwear disinfection", "No fencing", "Shared equipment"],
+                "answer": "Footwear disinfection"
+            },
+            {
+                "question": "What is the primary symptom of anthrax in cattle?",
+                "options": ["Sudden death", "Lameness", "Coughing", "Diarrhea"],
+                "answer": "Sudden death"
+            },
+            {
+                "question": "Which test confirms bovine viral diarrhea?",
+                "options": ["ELISA", "Skin test", "Urine test", "X-ray"],
+                "answer": "ELISA"
+            },
+            {
+                "question": "What is the main cause of lameness in feedlot cattle?",
+                "options": ["Foot rot", "Mastitis", "Ketosis", "Pneumonia"],
+                "answer": "Foot rot"
+            },
+            {
+                "question": "Which biosecurity measure reduces parasite transmission in grazing systems?",
+                "options": ["Overgrazing", "Rotational grazing", "No fencing", "Shared water"],
+                "answer": "Rotational grazing"
+            },
+            {
+                "question": "What is the treatment for bloat in cattle?",
+                "options": ["Antifoaming agents", "Antibiotics", "Hormones", "Vitamins"],
+                "answer": "Antifoaming agents"
+            },
+            {
+                "question": "Which disease affects poultry respiratory systems?",
+                "options": ["Infectious bronchitis", "Foot rot", "Ketosis", "Laminitis"],
+                "answer": "Infectious bronchitis"
+            },
+            {
+                "question": "What is the main symptom of ketosis in dairy cows?",
+                "options": ["Weight loss", "Lameness", "Coughing", "Fever"],
+                "answer": "Weight loss"
+            },
+            {
+                "question": "Which biosecurity measure reduces fly populations in barns?",
+                "options": ["Manure removal", "Overcrowding", "No ventilation", "Dirty waterers"],
+                "answer": "Manure removal"
+            },
+            {
+                "question": "What is the primary cause of swine dysentery?",
+                "options": ["Virus", "Bacteria", "Fungus", "Parasite"],
+                "answer": "Bacteria"
+            },
+            {
+                "question": "Which vaccine prevents leptospirosis in cattle?",
+                "options": ["5-way vaccine", "Rabies vaccine", "BVD vaccine", "Clostridial vaccine"],
+                "answer": "5-way vaccine"
+            },
+            {
+                "question": "What is the main symptom of avian coccidiosis?",
+                "options": ["Diarrhea", "Lameness", "Coughing", "Fever"],
+                "answer": "Diarrhea"
+            },
+            {
+                "question": "Which biosecurity measure prevents disease spread by equipment?",
+                "options": ["Shared tools", "Equipment disinfection", "No fencing", "Open housing"],
+                "answer": "Equipment disinfection"
+            },
+            {
+                "question": "What is the treatment for mange in pigs?",
+                "options": ["Ivermectin", "Penicillin", "Aspirin", "Insulin"],
+                "answer": "Ivermectin"
+            },
+            {
+                "question": "Which disease causes abortion in cattle?",
+                "options": ["Brucellosis", "Foot rot", "Laminitis", "Ketosis"],
+                "answer": "Brucellosis"
+            },
+            {
+                "question": "What is the main vector for African swine fever?",
+                "options": ["Ticks", "Mosquitoes", "Flies", "Midges"],
+                "answer": "Ticks"
+            },
+            {
+                "question": "Which biosecurity measure reduces rodent-related disease spread?",
+                "options": ["Rodent control", "Open feed storage", "No fencing", "Overcrowding"],
+                "answer": "Rodent control"
+            },
+            {
+                "question": "What is the primary symptom of mastitis in dairy cows?",
+                "options": ["Swollen udder", "Lameness", "Coughing", "Diarrhea"],
+                "answer": "Swollen udder"
+            },
+            {
+                "question": "Which test detects Newcastle disease in poultry?",
+                "options": ["PCR", "Skin test", "Urine test", "X-ray"],
+                "answer": "PCR"
+            },
+            {
+                "question": "What is the treatment for pinkeye in cattle?",
+                "options": ["Antibiotics", "Hormones", "Vitamins", "Probiotics"],
+                "answer": "Antibiotics"
+            },
+            {
+                "question": "Which biosecurity measure reduces waterborne disease spread?",
+                "options": ["Clean water sources", "Shared waterers", "No fencing", "Overcrowding"],
+                "answer": "Clean water sources"
+            },
+            {
+                "question": "What is the main symptom of scrapie in sheep?",
+                "options": ["Itching", "Lameness", "Coughing", "Diarrhea"],
+                "answer": "Itching"
+            },
+            {
+                "question": "Which vaccine prevents tetanus in livestock?",
+                "options": ["7-way vaccine", "Rabies vaccine", "BVD vaccine", "Leptospirosis vaccine"],
+                "answer": "7-way vaccine"
+            },
+            {
+                "question": "What is the main cause of pneumonia in calves?",
+                "options": ["Virus", "Bacteria", "Fungus", "Parasite"],
+                "answer": "Bacteria"
+            },
+            {
+                "question": "Which biosecurity measure reduces disease spread by wild birds?",
+                "options": ["Netting", "Open housing", "No fencing", "Shared water"],
+                "answer": "Netting"
+            },
+            {
+                "question": "What is the treatment for ringworm in cattle?",
+                "options": ["Antifungals", "Antibiotics", "Hormones", "Vitamins"],
+                "answer": "Antifungals"
+            },
+            {
+                "question": "Which disease affects the nervous system of poultry?",
+                "options": ["Marek’s disease", "Foot rot", "Ketosis", "Laminitis"],
+                "answer": "Marek’s disease"
+            },
+            {
+                "question": "What is the main symptom of bovine leukosis?",
+                "options": ["Lymph node enlargement", "Lameness", "Coughing", "Diarrhea"],
+                "answer": "Lymph node enlargement"
+            },
+            {
+                "question": "Which biosecurity measure reduces disease spread by vehicles?",
+                "options": ["Vehicle disinfection", "Open access", "No fencing", "Shared equipment"],
+                "answer": "Vehicle disinfection"
+            },
+            {
+                "question": "What is the treatment for scours in calves?",
+                "options": ["Electrolytes", "Antifungals", "Hormones", "Vitamins"],
+                "answer": "Electrolytes"
+            }
+        ]
+    },
+    "pasture-range-management": {
+        "title": "Pasture and Range Management Quiz",
+        "questions": [
+            {
+                "question": "What is a benefit of rotational grazing in pasture management?",
+                "options": ["Prevent overgrazing", "Increase soil erosion", "Reduce forage quality", "Decrease biodiversity"],
+                "answer": "Prevent overgrazing"
+            },
+            {
+                "question": "What is the crude protein content of alfalfa?",
+                "options": ["5%", "10%", "15%", "20%"],
+                "answer": "20%"
+            },
+            {
+                "question": "What is the carrying capacity of temperate pastures?",
+                "options": ["1 cow/ha", "2 cows/ha", "3 cows/ha", "4 cows/ha"],
+                "answer": "1 cow/ha"
+            },
+            {
+                "question": "Which practice reduces weeds by 70% in pastures?",
+                "options": ["Overgrazing", "Herbicide use", "Continuous grazing", "No-till farming"],
+                "answer": "Herbicide use"
+            },
+            {
+                "question": "How much nitrogen does clover add to soil?",
+                "options": ["50 kg/ha", "100 kg/ha", "150 kg/ha", "200 kg/ha"],
+                "answer": "100 kg/ha"
+            },
+            {
+                "question": "What is the main benefit of mixed-species grazing?",
+                "options": ["Improved pasture use", "Increased soil erosion", "Reduced biodiversity", "Higher water use"],
+                "answer": "Improved pasture use"
+            },
+            {
+                "question": "Which grass species is common in temperate pastures?",
+                "options": ["Bermudagrass", "Ryegrass", "Pangolagrass", "Napier grass"],
+                "answer": "Ryegrass"
+            },
+            {
+                "question": "What is the optimal grazing height for alfalfa?",
+                "options": ["5 cm", "10 cm", "15 cm", "20 cm"],
+                "answer": "15 cm"
+            },
+            {
+                "question": "Which practice improves soil moisture retention in pastures?",
+                "options": ["Mulching", "Overgrazing", "Continuous grazing", "No fencing"],
+                "answer": "Mulching"
+            },
+            {
+                "question": "What is the average regrowth period for grazed pastures?",
+                "options": ["1 week", "2 weeks", "4 weeks", "6 weeks"],
+                "answer": "4 weeks"
+            },
+            {
+                "question": "Which legume improves pasture fertility?",
+                "options": ["Bermudagrass", "Clover", "Ryegrass", "Fescue"],
+                "answer": "Clover"
+            },
+            {
+                "question": "What is the main cause of pasture degradation?",
+                "options": ["Overgrazing", "Understocking", "Fertilization", "Irrigation"],
+                "answer": "Overgrazing"
+            },
+            {
+                "question": "Which practice reduces soil compaction in pastures?",
+                "options": ["Rotational grazing", "Continuous grazing", "High stocking rates", "No fencing"],
+                "answer": "Rotational grazing"
+            },
+            {
+                "question": "What is the crude protein content of ryegrass?",
+                "options": ["5%", "10%", "15%", "20%"],
+                "answer": "15%"
+            },
+            {
+                "question": "Which tool monitors pasture growth rates?",
+                "options": ["Drones", "Tractors", "Manual rulers", "Thermometers"],
+                "answer": "Drones"
+            },
+            {
+                "question": "What is the main benefit of strip grazing?",
+                "options": ["Improved feed efficiency", "Increased soil erosion", "Reduced biodiversity", "Higher water use"],
+                "answer": "Improved feed efficiency"
+            },
+            {
+                "question": "Which practice improves pasture biodiversity?",
+                "options": ["Monoculture", "Mixed-species planting", "Overgrazing", "No fencing"],
+                "answer": "Mixed-species planting"
+            },
+            {
+                "question": "What is the carrying capacity of tropical pastures?",
+                "options": ["1 cow/ha", "2 cows/ha", "3 cows/ha", "4 cows/ha"],
+                "answer": "2 cows/ha"
+            },
+            {
+                "question": "Which practice reduces erosion in hilly pastures?",
+                "options": ["Contour plowing", "Overgrazing", "Continuous grazing", "No fencing"],
+                "answer": "Contour plowing"
+            },
+            {
+                "question": "What is the main source of phosphorus in pastures?",
+                "options": ["Manure", "Rainwater", "Irrigation", "Herbicides"],
+                "answer": "Manure"
+            },
+            {
+                "question": "Which grass is drought-tolerant in pastures?",
+                "options": ["Bermudagrass", "Ryegrass", "Fescue", "Clover"],
+                "answer": "Bermudagrass"
+            },
+            {
+                "question": "What is the optimal pH for pasture soils?",
+                "options": ["4.5", "5.5", "6.5", "7.5"],
+                "answer": "6.5"
+            },
+            {
+                "question": "Which practice improves water infiltration in pastures?",
+                "options": ["Aeration", "Overgrazing", "Continuous grazing", "No fencing"],
+                "answer": "Aeration"
+            },
+            {
+                "question": "What is the main benefit of deferred grazing?",
+                "options": ["Pasture recovery", "Increased soil erosion", "Reduced biodiversity", "Higher water use"],
+                "answer": "Pasture recovery"
+            },
+            {
+                "question": "Which legume is common in tropical pastures?",
+                "options": ["Alfalfa", "Stylo", "Ryegrass", "Fescue"],
+                "answer": "Stylo"
+            },
+            {
+                "question": "What is the average crude protein content of fescue?",
+                "options": ["5%", "10%", "15%", "20%"],
+                "answer": "10%"
+            },
+            {
+                "question": "Which practice reduces parasite loads in pastures?",
+                "options": ["Rotational grazing", "Continuous grazing", "High stocking rates", "No fencing"],
+                "answer": "Rotational grazing"
+            },
+            {
+                "question": "What is the main source of potassium in pastures?",
+                "options": ["Manure", "Rainwater", "Irrigation", "Herbicides"],
+                "answer": "Manure"
+            },
+            {
+                "question": "Which practice improves pasture establishment?",
+                "options": ["Seeding", "Overgrazing", "Continuous grazing", "No fencing"],
+                "answer": "Seeding"
+            },
+            {
+                "question": "What is the main benefit of silvopastoral systems?",
+                "options": ["Increased shade", "Increased soil erosion", "Reduced biodiversity", "Higher water use"],
+                "answer": "Increased shade"
+            },
+            {
+                "question": "Which grass is common in arid pastures?",
+                "options": ["Buffelgrass", "Ryegrass", "Fescue", "Clover"],
+                "answer": "Buffelgrass"
+            },
+            {
+                "question": "What is the optimal grazing height for ryegrass?",
+                "options": ["5 cm", "10 cm", "15 cm", "20 cm"],
+                "answer": "10 cm"
+            },
+            {
+                "question": "Which practice reduces nutrient runoff in pastures?",
+                "options": ["Buffer strips", "Overgrazing", "Continuous grazing", "No fencing"],
+                "answer": "Buffer strips"
+            },
+            {
+                "question": "What is the main benefit of overseeding pastures?",
+                "options": ["Improved forage quality", "Increased soil erosion", "Reduced biodiversity", "Higher water use"],
+                "answer": "Improved forage quality"
+            },
+            {
+                "question": "Which practice improves soil structure in pastures?",
+                "options": ["Organic matter addition", "Overgrazing", "Continuous grazing", "No fencing"],
+                "answer": "Organic matter addition"
+            },
+            {
+                "question": "What is the average crude protein content of clover?",
+                "options": ["5%", "10%", "15%", "20%"],
+                "answer": "20%"
+            },
+            {
+                "question": "Which practice reduces drought impact in pastures?",
+                "options": ["Irrigation", "Overgrazing", "Continuous grazing", "No fencing"],
+                "answer": "Irrigation"
+            },
+            {
+                "question": "What is the main benefit of fencing in pasture management?",
+                "options": ["Controlled grazing", "Increased soil erosion", "Reduced biodiversity", "Higher water use"],
+                "answer": "Controlled grazing"
+            },
+            {
+                "question": "Which grass is shade-tolerant in pastures?",
+                "options": ["Fescue", "Bermudagrass", "Ryegrass", "Clover"],
+                "answer": "Fescue"
+            },
+            {
+                "question": "What is the main source of sulfur in pastures?",
+                "options": ["Manure", "Rainwater", "Irrigation", "Herbicides"],
+                "answer": "Manure"
+            },
+            {
+                "question": "Which practice improves pasture resilience?",
+                "options": ["Diverse species", "Overgrazing", "Continuous grazing", "No fencing"],
+                "answer": "Diverse species"
+            },
+            {
+                "question": "What is the average regrowth period for tropical pastures?",
+                "options": ["1 week", "2 weeks", "3 weeks", "4 weeks"],
+                "answer": "3 weeks"
+            },
+            {
+                "question": "Which practice reduces soil salinity in pastures?",
+                "options": ["Leaching", "Overgrazing", "Continuous grazing", "No fencing"],
+                "answer": "Leaching"
+            },
+            {
+                "question": "What is the main benefit of liming in pastures?",
+                "options": ["pH correction", "Increased soil erosion", "Reduced biodiversity", "Higher water use"],
+                "answer": "pH correction"
+            },
+            {
+                "question": "Which legume is drought-tolerant in pastures?",
+                "options": ["Alfalfa", "Stylo", "Ryegrass", "Fescue"],
+                "answer": "Stylo"
+            },
+            {
+                "question": "What is the average crude protein content of bermudagrass?",
+                "options": ["5%", "10%", "15%", "20%"],
+                "answer": "10%"
+            },
+            {
+                "question": "Which practice reduces invasive species in pastures?",
+                "options": ["Herbicide use", "Overgrazing", "Continuous grazing", "No fencing"],
+                "answer": "Herbicide use"
+            },
+            {
+                "question": "What is the main benefit of water trough placement in pastures?",
+                "options": ["Even grazing distribution", "Increased soil erosion", "Reduced biodiversity", "Higher water use"],
+                "answer": "Even grazing distribution"
+            },
+            {
+                "question": "Which practice improves pasture drainage?",
+                "options": ["Tiling", "Overgrazing", "Continuous grazing", "No fencing"],
+                "answer": "Tiling"
+            },
+            {
+                "question": "What is the main source of calcium in pastures?",
+                "options": ["Manure", "Rainwater", "Lime", "Herbicides"],
+                "answer": "Lime"
+            }
+        ]
+    },
+    "animal-physiology": {
+        "title": "Animal Physiology Quiz",
+        "questions": [
+            {
+                "question": "How many stomach compartments do cattle have?",
+                "options": ["Two", "Three", "Four", "Five"],
+                "answer": "Four"
+            },
+            {
+                "question": "Which hormone regulates estrus in cows?",
+                "options": ["Insulin", "Progesterone", "Adrenaline", "Cortisol"],
+                "answer": "Progesterone"
+            },
+            {
+                "question": "What enables efficient gas exchange in birds?",
+                "options": ["Lungs", "Air sacs", "Gills", "Trachea"],
+                "answer": "Air sacs"
+            },
+            {
+                "question": "Which system supports high metabolism in mammals?",
+                "options": ["Two-chambered heart", "Three-chambered heart", "Four-chambered heart", "No heart"],
+                "answer": "Four-chambered heart"
+            },
+            {
+                "question": "What is a method of thermoregulation in dogs?",
+                "options": ["Sweating", "Panting", "Shivering", "Hibernation"],
+                "answer": "Panting"
+            },
+            {
+                "question": "What is the primary function of the rumen in cattle?",
+                "options": ["Fat digestion", "Fermentation", "Protein synthesis", "Water absorption"],
+                "answer": "Fermentation"
+            },
+            {
+                "question": "Which hormone stimulates milk production in dairy cows?",
+                "options": ["Oxytocin", "Prolactin", "Adrenaline", "Insulin"],
+                "answer": "Prolactin"
+            },
+            {
+                "question": "What is the average heart rate of a resting horse?",
+                "options": ["20-30 bpm", "30-40 bpm", "50-60 bpm", "70-80 bpm"],
+                "answer": "30-40 bpm"
+            },
+            {
+                "question": "Which organ filters blood in animals?",
+                "options": ["Liver", "Kidney", "Spleen", "Pancreas"],
+                "answer": "Kidney"
+            },
+            {
+                "question": "What is the primary function of hemoglobin in animals?",
+                "options": ["Oxygen transport", "Nutrient absorption", "Waste elimination", "Hormone production"],
+                "answer": "Oxygen transport"
+            },
+            {
+                "question": "Which hormone regulates blood sugar in animals?",
+                "options": ["Insulin", "Progesterone", "Adrenaline", "Cortisol"],
+                "answer": "Insulin"
+            },
+            {
+                "question": "What is the average respiratory rate of a resting cow?",
+                "options": ["10-20 breaths/min", "20-30 breaths/min", "30-40 breaths/min", "40-50 breaths/min"],
+                "answer": "20-30 breaths/min"
+            },
+            {
+                "question": "Which system controls voluntary movements in animals?",
+                "options": ["Nervous system", "Endocrine system", "Digestive system", "Respiratory system"],
+                "answer": "Nervous system"
+            },
+            {
+                "question": "What is the primary function of the omasum in ruminants?",
+                "options": ["Water absorption", "Fermentation", "Protein synthesis", "Fat digestion"],
+                "answer": "Water absorption"
+            },
+            {
+                "question": "Which hormone triggers ovulation in mammals?",
+                "options": ["Luteinizing hormone", "Prolactin", "Oxytocin", "Insulin"],
+                "answer": "Luteinizing hormone"
+            },
+            {
+                "question": "What is the average body temperature of a chicken?",
+                "options": ["37°C", "39°C", "41°C", "43°C"],
+                "answer": "41°C"
+            },
+            {
+                "question": "Which organ produces bile in animals?",
+                "options": ["Liver", "Kidney", "Spleen", "Pancreas"],
+                "answer": "Liver"
+            },
+            {
+                "question": "What is the primary function of the abomasum in ruminants?",
+                "options": ["Fermentation", "Acid digestion", "Water absorption", "Protein synthesis"],
+                "answer": "Acid digestion"
+            },
+            {
+                "question": "Which hormone reduces stress in animals?",
+                "options": ["Oxytocin", "Adrenaline", "Cortisol", "Insulin"],
+                "answer": "Oxytocin"
+            },
+            {
+                "question": "What is the average gestation period for sheep?",
+                "options": ["120 days", "150 days", "180 days", "210 days"],
+                "answer": "150 days"
+            },
+            {
+                "question": "Which system regulates body temperature in mammals?",
+                "options": ["Nervous system", "Endocrine system", "Integumentary system", "Respiratory system"],
+                "answer": "Integumentary system"
+            },
+            {
+                "question": "What is the primary function of the pancreas in animals?",
+                "options": ["Hormone production", "Fermentation", "Water absorption", "Fat digestion"],
+                "answer": "Hormone production"
+            },
+            {
+                "question": "Which hormone stimulates egg production in poultry?",
+                "options": ["Follicle-stimulating hormone", "Prolactin", "Oxytocin", "Insulin"],
+                "answer": "Follicle-stimulating hormone"
+            },
+            {
+                "question": "What is the average heart rate of a resting pig?",
+                "options": ["50-60 bpm", "70-80 bpm", "90-100 bpm", "110-120 bpm"],
+                "answer": "70-80 bpm"
+            },
+            {
+                "question": "Which organ stores glycogen in animals?",
+                "options": ["Liver", "Kidney", "Spleen", "Pancreas"],
+                "answer": "Liver"
+            },
+            {
+                "question": "What is the primary function of the reticulum in ruminants?",
+                "options": ["Fermentation", "Sorting particles", "Acid digestion", "Water absorption"],
+                "answer": "Sorting particles"
+            },
+            {
+                "question": "Which hormone regulates metabolism in animals?",
+                "options": ["Thyroxine", "Progesterone", "Adrenaline", "Cortisol"],
+                "answer": "Thyroxine"
+            },
+            {
+                "question": "What is the average respiratory rate of a resting horse?",
+                "options": ["10-15 breaths/min", "15-20 breaths/min", "20-25 breaths/min", "25-30 breaths/min"],
+                "answer": "15-20 breaths/min"
+            },
+            {
+                "question": "Which system produces antibodies in animals?",
+                "options": ["Immune system", "Nervous system", "Endocrine system", "Digestive system"],
+                "answer": "Immune system"
+            },
+            {
+                "question": "What is the primary function of the small intestine in animals?",
+                "options": ["Nutrient absorption", "Fermentation", "Water absorption", "Acid digestion"],
+                "answer": "Nutrient absorption"
+            },
+            {
+                "question": "Which hormone stimulates muscle growth in animals?",
+                "options": ["Growth hormone", "Prolactin", "Oxytocin", "Insulin"],
+                "answer": "Growth hormone"
+            },
+            {
+                "question": "What is the average body temperature of a cow?",
+                "options": ["36°C", "38°C", "40°C", "42°C"],
+                "answer": "38°C"
+            },
+            {
+                "question": "Which organ regulates blood pressure in animals?",
+                "options": ["Kidney", "Liver", "Spleen", "Pancreas"],
+                "answer": "Kidney"
+            },
+            {
+                "question": "What is the primary function of the large intestine in animals?",
+                "options": ["Water absorption", "Fermentation", "Nutrient absorption", "Acid digestion"],
+                "answer": "Water absorption"
+            },
+            {
+                "question": "Which hormone triggers milk let-down in dairy cows?",
+                "options": ["Oxytocin", "Prolactin", "Adrenaline", "Insulin"],
+                "answer": "Oxytocin"
+            },
+            {
+                "question": "What is the average gestation period for pigs?",
+                "options": ["90 days", "114 days", "150 days", "180 days"],
+                "answer": "114 days"
+            },
+            {
+                "question": "Which system protects against pathogens in animals?",
+                "options": ["Immune system", "Nervous system", "Endocrine system", "Respiratory system"],
+                "answer": "Immune system"
+            },
+            {
+                "question": "What is the primary function of the thyroid gland in animals?",
+                "options": ["Metabolism regulation", "Fermentation", "Water absorption", "Acid digestion"],
+                "answer": "Metabolism regulation"
+            },
+            {
+                "question": "Which hormone regulates calcium levels in animals?",
+                "options": ["Parathyroid hormone", "Prolactin", "Oxytocin", "Insulin"],
+                "answer": "Parathyroid hormone"
+            },
+            {
+                "question": "What is the average heart rate of a resting sheep?",
+                "options": ["50-60 bpm", "70-80 bpm", "90-100 bpm", "110-120 bpm"],
+                "answer": "70-80 bpm"
+            },
+            {
+                "question": "Which organ detoxifies blood in animals?",
+                "options": ["Liver", "Kidney", "Spleen", "Pancreas"],
+                "answer": "Liver"
+            },
+            {
+                "question": "What is the primary function of the cecum in horses?",
+                "options": ["Fermentation", "Acid digestion", "Water absorption", "Nutrient absorption"],
+                "answer": "Fermentation"
+            },
+            {
+                "question": "Which hormone stimulates appetite in animals?",
+                "options": ["Ghrelin", "Prolactin", "Oxytocin", "Insulin"],
+                "answer": "Ghrelin"
+            },
+            {
+                "question": "What is the average respiratory rate of a resting pig?",
+                "options": ["10-15 breaths/min", "15-20 breaths/min", "20-25 breaths/min", "25-30 breaths/min"],
+                "answer": "15-20 breaths/min"
+            },
+            {
+                "question": "Which system controls reproduction in animals?",
+                "options": ["Endocrine system", "Nervous system", "Immune system", "Digestive system"],
+                "answer": "Endocrine system"
+            },
+            {
+                "question": "What is the primary function of the spleen in animals?",
+                "options": ["Blood filtration", "Fermentation", "Water absorption", "Acid digestion"],
+                "answer": "Blood filtration"
+            },
+            {
+                "question": "Which hormone regulates stress response in animals?",
+                "options": ["Cortisol", "Prolactin", "Oxytocin", "Insulin"],
+                "answer": "Cortisol"
+            },
+            {
+                "question": "What is the average body temperature of a pig?",
+                "options": ["36°C", "38°C", "39°C", "41°C"],
+                "answer": "39°C"
+            },
+            {
+                "question": "Which organ produces insulin in animals?",
+                "options": ["Pancreas", "Liver", "Spleen", "Kidney"],
+                "answer": "Pancreas"
+            },
+            {
+                "question": "What is the primary function of the avian crop?",
+                "options": ["Food storage", "Fermentation", "Water absorption", "Acid digestion"],
+                "answer": "Food storage"
+            },
+            {
+                "question": "Which hormone regulates molting in poultry?",
+                "options": ["Thyroxine", "Prolactin", "Oxytocin", "Insulin"],
+                "answer": "Thyroxine"
+            }
+        ]
+    },
+    "animal-behavior": {
+        "title": "Animal Behavior Quiz",
+        "questions": [
+            {
+                "question": "What is a key aspect of social behavior in cattle?",
+                "options": ["Solitary living", "Hierarchy", "No interaction", "Random movement"],
+                "answer": "Hierarchy"
+            },
+            {
+                "question": "Which behavior involves selective grazing in sheep?",
+                "options": ["Foraging", "Mating", "Stress response", "Learning"],
+                "answer": "Foraging"
+            },
+            {
+                "question": "What reduces feather pecking in poultry by 40%?",
+                "options": ["Scratching posts", "Cages", "Feed additives", "Vaccines"],
+                "answer": "Scratching posts"
+            },
+            {
+                "question": "Which field studies natural animal behaviors?",
+                "options": ["Ethology", "Genomics", "Biochemistry", "Ecology"],
+                "answer": "Ethology"
+            },
+            {
+                "question": "What is a benefit of enriched environments in poultry?",
+                "options": ["Increased stress", "Reduced stress", "Soil erosion", "Water scarcity"],
+                "answer": "Reduced stress"
+            },
+            {
+                "question": "Which behavior indicates stress in dairy cows?",
+                "options": ["Tail swishing", "Grazing", "Resting", "Drinking"],
+                "answer": "Tail swishing"
+            },
+            {
+                "question": "What is the main purpose of dust bathing in poultry?",
+                "options": ["Thermoregulation", "Parasite control", "Feeding", "Mating"],
+                "answer": "Parasite control"
+            },
+            {
+                "question": "Which behavior is common in pigs during play?",
+                "options": ["Rooting", "Fighting", "Sleeping", "Grazing"],
+                "answer": "Rooting"
+            },
+            {
+                "question": "What is the main cause of stereotypic behavior in animals?",
+                "options": ["Stress", "Hunger", "Exercise", "Social interaction"],
+                "answer": "Stress"
+            },
+            {
+                "question": "Which behavior improves lamb survival in sheep?",
+                "options": ["Maternal bonding", "Solitary grazing", "Aggression", "Hiding"],
+                "answer": "Maternal bonding"
+            },
+            {
+                "question": "What is the primary function of vocalization in cattle?",
+                "options": ["Communication", "Thermoregulation", "Feeding", "Mating"],
+                "answer": "Communication"
+            },
+            {
+                "question": "Which behavior indicates dominance in poultry?",
+                "options": ["Pecking order", "Foraging", "Resting", "Drinking"],
+                "answer": "Pecking order"
+            },
+            {
+                "question": "What reduces aggression in group-housed pigs?",
+                "options": ["Enriched environments", "Overcrowding", "No bedding", "High stocking density"],
+                "answer": "Enriched environments"
+            },
+            {
+                "question": "Which behavior is common in horses under stress?",
+                "options": ["Cribbing", "Grazing", "Resting", "Drinking"],
+                "answer": "Cribbing"
+            },
+            {
+                "question": "What is the main purpose of grooming in cattle?",
+                "options": ["Parasite removal", "Thermoregulation", "Feeding", "Mating"],
+                "answer": "Parasite removal"
+            },
+            {
+                "question": "Which behavior indicates heat in dairy cows?",
+                "options": ["Mounting", "Foraging", "Resting", "Drinking"],
+                "answer": "Mounting"
+            },
+            {
+                "question": "What is the main benefit of group housing in pigs?",
+                "options": ["Social interaction", "Increased stress", "Reduced growth", "Higher disease risk"],
+                "answer": "Social interaction"
+            },
+            {
+                "question": "Which behavior improves feed efficiency in poultry?",
+                "options": ["Foraging", "Fighting", "Sleeping", "Grazing"],
+                "answer": "Foraging"
+            },
+            {
+                "question": "What is the primary cause of tail biting in pigs?",
+                "options": ["Stress", "Hunger", "Exercise", "Social interaction"],
+                "answer": "Stress"
+            },
+            {
+                "question": "Which behavior indicates pain in dairy cows?",
+                "options": ["Lameness", "Grazing", "Resting", "Drinking"],
+                "answer": "Lameness"
+            },
+            {
+                "question": "What is the main purpose of nest building in sows?",
+                "options": ["Farrowing preparation", "Thermoregulation", "Feeding", "Mating"],
+                "answer": "Farrowing preparation"
+            },
+            {
+                "question": "Which behavior improves egg quality in poultry?",
+                "options": ["Nesting", "Fighting", "Sleeping", "Grazing"],
+                "answer": "Nesting"
+            },
+            {
+                "question": "What is the main cause of feather pecking in poultry?",
+                "options": ["Stress", "Hunger", "Exercise", "Social interaction"],
+                "answer": "Stress"
+            },
+            {
+                "question": "Which behavior indicates social bonding in sheep?",
+                "options": ["Flocking", "Solitary grazing", "Aggression", "Hiding"],
+                "answer": "Flocking"
+            },
+            {
+                "question": "What is the main benefit of perches in poultry housing?",
+                "options": ["Reduced stress", "Increased stress", "Reduced growth", "Higher disease risk"],
+                "answer": "Reduced stress"
+            },
+            {
+                "question": "Which behavior improves calf health in dairy cows?",
+                "options": ["Colostrum feeding", "Solitary grazing", "Aggression", "Hiding"],
+                "answer": "Colostrum feeding"
+            },
+            {
+                "question": "What is the primary function of scent marking in animals?",
+                "options": ["Territory establishment", "Thermoregulation", "Feeding", "Mating"],
+                "answer": "Territory establishment"
+            },
+            {
+                "question": "Which behavior indicates submission in cattle?",
+                "options": ["Head lowering", "Mounting", "Fighting", "Grazing"],
+                "answer": "Head lowering"
+            },
+            {
+                "question": "What is the main purpose of play behavior in young animals?",
+                "options": ["Skill development", "Thermoregulation", "Feeding", "Mating"],
+                "answer": "Skill development"
+            },
+            {
+                "question": "Which behavior improves fertility in dairy cows?",
+                "options": ["Estrus detection", "Solitary grazing", "Aggression", "Hiding"],
+                "answer": "Estrus detection"
+            },
+            {
+                "question": "What is the main cause of pacing in confined animals?",
+                "options": ["Stress", "Hunger", "Exercise", "Social interaction"],
+                "answer": "Stress"
+            },
+            {
+                "question": "Which behavior indicates hunger in poultry?",
+                "options": ["Increased foraging", "Mounting", "Resting", "Drinking"],
+                "answer": "Increased foraging"
+            },
+            {
+                "question": "What is the main benefit of shade in grazing animals?",
+                "options": ["Reduced heat stress", "Increased stress", "Reduced growth", "Higher disease risk"],
+                "answer": "Reduced heat stress"
+            },
+            {
+                "question": "Which behavior improves social cohesion in cattle?",
+                "options": ["Group grazing", "Solitary grazing", "Aggression", "Hiding"],
+                "answer": "Group grazing"
+            },
+            {
+                "question": "What is the primary function of allogrooming in animals?",
+                "options": ["Social bonding", "Thermoregulation", "Feeding", "Mating"],
+                "answer": "Social bonding"
+            },
+            {
+                "question": "Which behavior indicates fear in horses?",
+                "options": ["Bolting", "Grazing", "Resting", "Drinking"],
+                "answer": "Bolting"
+            },
+            {
+                "question": "What is the main purpose of wallowing in pigs?",
+                "options": ["Thermoregulation", "Feeding", "Mating", "Social interaction"],
+                "answer": "Thermoregulation"
+            },
+            {
+                "question": "Which behavior improves milk yield in dairy cows?",
+                "options": ["Calm handling", "Solitary grazing", "Aggression", "Hiding"],
+                "answer": "Calm handling"
+            },
+            {
+                "question": "What is the main cause of cannibalism in poultry?",
+                "options": ["Stress", "Hunger", "Exercise", "Social interaction"],
+                "answer": "Stress"
+            },
+            {
+                "question": "Which behavior indicates illness in sheep?",
+                "options": ["Isolation", "Grazing", "Resting", "Drinking"],
+                "answer": "Isolation"
+            },
+            {
+                "question": "What is the main benefit of foraging in pigs?",
+                "options": ["Reduced stress", "Increased stress", "Reduced growth", "Higher disease risk"],
+                "answer": "Reduced stress"
+            },
+            {
+                "question": "Which behavior improves growth rates in calves?",
+                "options": ["Social interaction", "Solitary grazing", "Aggression", "Hiding"],
+                "answer": "Social interaction"
+            },
+            {
+                "question": "What is the primary function of bleating in sheep?",
+                "options": ["Communication", "Thermoregulation", "Feeding", "Mating"],
+                "answer": "Communication"
+            },
+            {
+                "question": "Which behavior indicates dominance in horses?",
+                "options": ["Kicking", "Grazing", "Resting", "Drinking"],
+                "answer": "Kicking"
+            },
+            {
+                "question": "What is the main purpose of scratching in poultry?",
+                "options": ["Parasite control", "Thermoregulation", "Feeding", "Mating"],
+                "answer": "Parasite control"
+            },
+            {
+                "question": "Which behavior improves welfare in group-housed animals?",
+                "options": ["Enriched environments", "Overcrowding", "No bedding", "High stocking density"],
+                "answer": "Enriched environments"
+            },
+            {
+                "question": "What is the main cause of bar biting in sows?",
+                "options": ["Stress", "Hunger", "Exercise", "Social interaction"],
+                "answer": "Stress"
+            }
+        ]
+    },
+    'animal-behavior': {
+        title: 'Animal Behavior Quiz',
+        questions: [
+            {
+                "question": "Which behavior indicates contentment in cattle?",
+                "options": ["Ruminating", "Mounting", "Fighting", "Pacing"],
+                "answer": "Ruminating"
+            },
+            {
+                "question": "What is the main benefit of loose housing in dairy cows?",
+                "options": ["Increased mobility", "Increased stress", "Reduced growth", "Higher disease risk"],
+                "answer": "Increased mobility"
+            },
+            {
+                "question": "Which behavior improves egg production in poultry?",
+                "options": ["Calm environments", "Solitary grazing", "Aggression", "Hiding"],
+                "answer": "Calm environments"
+            }
+        ]
+    },
+"animal-welfare": {
+    "title": "Animal Welfare Quiz",
+    "questions": [
+            {
+                "question": "Which of the Five Freedoms ensures animals can express normal behavior?",
+                "options": ["Freedom from hunger", "Freedom from discomfort", "Freedom to express behavior", "Freedom from pain"],
+                "answer": "Freedom to express behavior"
+            },
+            {
+                "question": "What is a welfare indicator in pigs?",
+                "options": ["Tail biting", "Milk yield", "Egg production", "Wool quality"],
+                "answer": "Tail biting"
+            },
+            {
+                "question": "What is the space requirement for dairy cows?",
+                "options": ["0.8 m²", "1.8 m²", "2.8 m²", "3.8 m²"],
+                "answer": "1.8 m²"
+            },
+            {
+                "question": "What reduces lameness in dairy cows by 25%?",
+                "options": ["Hard bedding", "Soft bedding", "No bedding", "Cages"],
+                "answer": "Soft bedding"
+            },
+            {
+                "question": "What is a challenge in animal welfare improvements?",
+                "options": ["Low cost", "Increased production costs", "No regulation", "Soil health"],
+                "answer": "Increased production costs"
+            },
+            {
+                "question": "Which housing system improves welfare in poultry?",
+                "options": ["Battery cages", "Free-range", "Feedlots", "Stalls"],
+                "answer": "Free-range"
+            },
+            {
+                "question": "What is the minimum space requirement for laying hens?",
+                "options": ["550 cm²", "750 cm²", "950 cm²", "1150 cm²"],
+                "answer": "750 cm²"
+            },
+            {
+                "question": "Which welfare indicator shows stress in poultry?",
+                "options": ["Feather pecking", "Egg production", "Wool quality", "Milk yield"],
+                "answer": "Feather pecking"
+            },
+            {
+                "question": "What is the main benefit of enriched cages for poultry?",
+                "options": ["Reduced stress", "Increased stress", "Reduced growth", "Higher disease risk"],
+                "answer": "Reduced stress"
+            },
+            {
+                "question": "Which practice improves welfare in pigs?",
+                "options": ["Group housing", "Overcrowding", "No bedding", "High stocking density"],
+                "answer": "Group housing"
+            },
+            {
+                "question": "What is the main purpose of the Five Freedoms?",
+                "options": ["Ensure animal welfare", "Increase production", "Reduce costs", "Improve soil health"],
+                "answer": "Ensure animal welfare"
+            },
+            {
+                "question": "Which welfare indicator shows pain in dairy cows?",
+                "options": ["Lameness", "Milk yield", "Egg production", "Wool quality"],
+                "answer": "Lameness"
+            },
+            {
+                "question": "What is the minimum space requirement for broiler chickens?",
+                "options": ["0.1 m²", "0.2 m²", "0.3 m²", "0.4 m²"],
+                "answer": "0.2 m²"
+            },
+            {
+                "question": "Which practice reduces stress in dairy cows?",
+                "options": ["Calm handling", "Overcrowding", "No bedding", "High stocking density"],
+                "answer": "Calm handling"
+            },
+            {
+                "question": "What is the main benefit of shade for grazing animals?",
+                "options": ["Reduced heat stress", "Increased stress", "Reduced growth", "Higher disease risk"],
+                "answer": "Reduced heat stress"
+            },
+            {
+                "question": "Which welfare indicator shows hunger in animals?",
+                "options": ["Weight loss", "Milk yield", "Egg production", "Wool quality"],
+                "answer": "Weight loss"
+            },
+            {
+                "question": "What is the main purpose of bedding in dairy barns?",
+                "options": ["Improve comfort", "Increase production", "Reduce costs", "Improve soil health"],
+                "answer": "Improve comfort"
+            },
+            {
+                "question": "Which practice improves welfare in sheep?",
+                "options": ["Regular shearing", "Overcrowding", "No bedding", "High stocking density"],
+                "answer": "Regular shearing"
+            },
+            {
+                "question": "What is the minimum space requirement for pigs?",
+                "options": ["0.5 m²", "1.0 m²", "1.5 m²", "2.0 m²"],
+                "answer": "1.0 m²"
+            },
+            {
+                "question": "Which welfare indicator shows fear in animals?",
+                "options": ["Flight response", "Milk yield", "Egg production", "Wool quality"],
+                "answer": "Flight response"
+            },
+            {
+                "question": "What is the main benefit of perches in poultry housing?",
+                "options": ["Reduced stress", "Increased stress", "Reduced growth", "Higher disease risk"],
+                "answer": "Reduced stress"
+            },
+            {
+                "question": "Which practice improves welfare in calves?",
+                "options": ["Colostrum feeding", "Overcrowding", "No bedding", "High stocking density"],
+                "answer": "Colostrum feeding"
+            },
+            {
+                "question": "What is the main purpose of ventilation in barns?",
+                "options": ["Improve air quality", "Increase production", "Reduce costs", "Improve soil health"],
+                "answer": "Improve air quality"
+            },
+            {
+                "question": "Which welfare indicator shows discomfort in animals?",
+                "options": ["Restlessness", "Milk yield", "Egg production", "Wool quality"],
+                "answer": "Restlessness"
+            },
+            {
+                "question": "What is the main benefit of loose housing in dairy cows?",
+                "options": ["Increased mobility", "Increased stress", "Reduced growth", "Higher disease risk"],
+                "answer": "Increased mobility"
+            },
+            {
+                "question": "Which practice reduces aggression in pigs?",
+                "options": ["Enriched environments", "Overcrowding", "No bedding", "High stocking density"],
+                "answer": "Enriched environments"
+            },
+            {
+                "question": "What is the main purpose of water access in animal welfare?",
+                "options": ["Prevent dehydration", "Increase production", "Reduce costs", "Improve soil health"],
+                "answer": "Prevent dehydration"
+            },
+            {
+                "question": "Which welfare indicator shows illness in animals?",
+                "options": ["Lethargy", "Milk yield", "Egg production", "Wool quality"],
+                "answer": "Lethargy"
+            },
+            {
+                "question": "What is the main benefit of regular health checks in livestock?",
+                "options": ["Early disease detection", "Increased stress", "Reduced growth", "Higher disease risk"],
+                "answer": "Early disease detection"
+            },
+            {
+                "question": "Which practice improves welfare in laying hens?",
+                "options": ["Nesting boxes", "Overcrowding", "No bedding", "High stocking density"],
+                "answer": "Nesting boxes"
+            },
+            {
+                "question": "What is the minimum space requirement for sheep?",
+                "options": ["0.5 m²", "1.0 m²", "1.5 m²", "2.0 m²"],
+                "answer": "1.5 m²"
+            },
+            {
+                "question": "Which welfare indicator shows overheating in animals?",
+                "options": ["Panting", "Milk yield", "Egg production", "Wool quality"],
+                "answer": "Panting"
+            },
+            {
+                "question": "What is the main benefit of low-stress handling in cattle?",
+                "options": ["Reduced fear", "Increased stress", "Reduced growth", "Higher disease risk"],
+                "answer": "Reduced fear"
+            },
+            {
+                "question": "Which practice improves welfare in broiler chickens?",
+                "options": ["Lower stocking density", "Overcrowding", "No bedding", "High stocking density"],
+                "answer": "Lower stocking density"
+            },
+            {
+                "question": "What is the main purpose of pain management in animal welfare?",
+                "options": ["Reduce suffering", "Increase production", "Reduce costs", "Improve soil health"],
+                "answer": "Reduce suffering"
+            },
+            {
+                "question": "Which welfare indicator shows poor nutrition in animals?",
+                "options": ["Low body condition", "Milk yield", "Egg production", "Wool quality"],
+                "answer": "Low body condition"
+            },
+            {
+                "question": "What is the main benefit of social housing in pigs?",
+                "options": ["Reduced stress", "Increased stress", "Reduced growth", "Higher disease risk"],
+                "answer": "Reduced stress"
+            },
+            {
+                "question": "Which practice improves welfare in dairy calves?",
+                "options": ["Group housing", "Overcrowding", "No bedding", "High stocking density"],
+                "answer": "Group housing"
+            },
+            {
+                "question": "What is the main purpose of enrichment in poultry housing?",
+                "options": ["Encourage natural behavior", "Increase production", "Reduce costs", "Improve soil health"],
+                "answer": "Encourage natural behavior"
+            },
+            {
+                "question": "Which welfare indicator shows overcrowding in animals?",
+                "options": ["Aggression", "Milk yield", "Egg production", "Wool quality"],
+                "answer": "Aggression"
+            },
+            {
+                "question": "What is the main benefit of clean bedding in dairy barns?",
+                "options": ["Reduced disease", "Increased stress", "Reduced growth", "Higher disease risk"],
+                "answer": "Reduced disease"
+            },
+            {
+                "question": "Which practice improves welfare in horses?",
+                "options": ["Regular exercise", "Overcrowding", "No bedding", "High stocking density"],
+                "answer": "Regular exercise"
+            },
+            {
+                "question": "What is the minimum space requirement for goats?",
+                "options": ["0.5 m²", "1.0 m²", "1.5 m²", "2.0 m²"],
+                "answer": "1.5 m²"
+            },
+            {
+                "question": "Which welfare indicator shows dehydration in animals?",
+                "options": ["Sunken eyes", "Milk yield", "Egg production", "Wool quality"],
+                "answer": "Sunken eyes"
+            },
+            {
+                "question": "What is the main benefit of proper flooring in barns?",
+                "options": ["Reduced lameness", "Increased stress", "Reduced growth", "Higher disease risk"],
+                "answer": "Reduced lameness"
+            },
+            {
+                "question": "Which practice improves welfare in sheep during transport?",
+                "options": ["Adequate space", "Overcrowding", "No bedding", "High stocking density"],
+                "answer": "Adequate space"
+            },
+{
+    "question": "What is the main purpose of humane slaughter in animal welfare?",
+    "options": ["Reduce suffering", "Increase production", "Reduce costs", "Improve soil health"],
+    "answer": "Reduce suffering"
+},
+{
+    "question": "Which welfare indicator shows poor air quality in barns?",
+    "options": ["Coughing", "Milk yield", "Egg production", "Wool quality"],
+    "answer": "Coughing"
+},
+            {
+                "question": "What is the main benefit of group housing in calves?",
+                "options": ["Social development", "Increased stress", "Reduced growth", "Higher disease risk"],
+                "answer": "Social development"
+            },
+            {
+                "question": "Which practice improves welfare in poultry during transport?",
+                "options": ["Ventilated crates", "Overcrowding", "No bedding", "High stocking density"],
+                "answer": "Ventilated crates"
+            },
+            {
+                "question": "What is the main purpose of monitoring animal behavior in welfare?",
+                "options": ["Detect distress", "Increase production", "Reduce costs", "Improve soil health"],
+                "answer": "Detect distress"
+            }
+        ]
+    },
+
+
+    "sustainable-livestock-systems": {
+        "title": "Sustainable Livestock Systems Quiz",
+        "questions": [
+            {
+                "question": "What is a key goal of sustainable livestock systems?",
+                "options": ["Increase water usage", "Balance productivity and environment", "Reduce soil fertility", "Increase crop yield"],
+                "answer": "Balance productivity and environment"
+            },
+            {
+                "question": "How much biogas is produced from 1 ton of manure?",
+                "options": ["20 m³", "30 m³", "40 m³", "50 m³"],
+                "answer": "50 m³"
+            },
+            {
+                "question": "What reduces water use by 20% in livestock systems?",
+                "options": ["Resource efficiency", "Overgrazing", "Continuous grazing", "Soil erosion"],
+                "answer": "Resource efficiency"
+            },
+            {
+                "question": "Which practice enhances soil health in livestock systems?",
+                "options": ["Regenerative agriculture", "Monoculture", "Deforestation", "Overgrazing"],
+                "answer": "Regenerative agriculture"
+            },
+            {
+                "question": "What is a benefit of silvopastoral systems?",
+                "options": ["25% increase in carbon sequestration", "Increased water usage", "Soil erosion", "Crop failure"],
+                "answer": "25% increase in carbon sequestration"
+            },
+            {
+                "question": "Which practice reduces methane emissions in ruminants?",
+                "options": ["Feed additives", "Overgrazing", "Continuous grazing", "Soil erosion"],
+                "answer": "Feed additives"
+            },
+            {
+                "question": "What is the main benefit of rotational grazing in sustainable systems?",
+                "options": ["Improved soil health", "Increased water usage", "Soil erosion", "Crop failure"],
+                "answer": "Improved soil health"
+            },
+            {
+                "question": "Which technology monitors water use in livestock systems?",
+                "options": ["Smart meters", "Drones", "Tractors", "Manual gauges"],
+                "answer": "Smart meters"
+            },
+            {
+                "question": "What is the main purpose of manure management in sustainable systems?",
+                "options": ["Reduce emissions", "Increase water usage", "Soil erosion", "Crop failure"],
+                "answer": "Reduce emissions"
+            },
+            {
+                "question": "Which practice improves biodiversity in livestock systems?",
+                "options": ["Mixed-species grazing", "Overgrazing", "Continuous grazing", "Soil erosion"],
+                "answer": "Mixed-species grazing"
+            },
+            {
+                "question": "What is the main benefit of anaerobic digesters in livestock farms?",
+                "options": ["Energy production", "Increased water usage", "Soil erosion", "Crop failure"],
+                "answer": "Energy production"
+            },
+            {
+                "question": "Which practice reduces nitrogen runoff in sustainable systems?",
+                "options": ["Composting", "Overgrazing", "Continuous grazing", "Soil erosion"],
+                "answer": "Composting"
+            },
+            {
+                "question": "What is the main benefit of precision feeding in livestock?",
+                "options": ["Reduced waste", "Increased water usage", "Soil erosion", "Crop failure"],
+                "answer": "Reduced waste"
+            },
+            {
+                "question": "Which technology improves feed efficiency in livestock systems?",
+                "options": ["Automated feeders", "Drones", "Tractors", "Manual carts"],
+                "answer": "Automated feeders"
+            },
+            {
+                "question": "What is the main purpose of agroforestry in livestock systems?",
+                "options": ["Increase shade", "Increase water usage", "Soil erosion", "Crop failure"],
+                "answer": "Increase shade"
+            },
+            {
+                "question": "Which practice reduces soil erosion in grazing systems?",
+                "options": ["Cover crops", "Overgrazing", "Continuous grazing", "Deforestation"],
+                "answer": "Cover crops"
+            },
+            {
+                "question": "What is the main benefit of integrated crop-livestock systems?",
+                "options": ["Improved soil fertility", "Increased water usage", "Soil erosion", "Crop failure"],
+                "answer": "Improved soil fertility"
+            },
+            {
+                "question": "Which practice reduces ammonia emissions in livestock systems?",
+                "options": ["Ventilation", "Overgrazing", "Continuous grazing", "Soil erosion"],
+                "answer": "Ventilation"
+            },
+            {
+                "question": "What is the main purpose of rotational grazing in sustainable systems?",
+                "options": ["Prevent overgrazing", "Increase water usage", "Soil erosion", "Crop failure"],
+                "answer": "Prevent overgrazing"
+            },
+            {
+                "question": "Which technology monitors livestock emissions?",
+                "options": ["Sensors", "Drones", "Tractors", "Manual gauges"],
+                "answer": "Sensors"
+            },
+            {
+                "question": "What is the main benefit of organic livestock farming?",
+                "options": ["Reduced chemical use", "Increased water usage", "Soil erosion", "Crop failure"],
+                "answer": "Reduced chemical use"
+            },
+            {
+                "question": "Which practice improves water quality in livestock systems?",
+                "options": ["Riparian buffers", "Overgrazing", "Continuous grazing", "Soil erosion"],
+                "answer": "Riparian buffers"
+            },
+            {
+                "question": "What is the main purpose of feed additives in sustainable systems?",
+                "options": ["Reduce methane", "Increase water usage", "Soil erosion", "Crop failure"],
+                "answer": "Reduce methane"
+            },
+            {
+                "question": "Which practice enhances carbon storage in pastures?",
+                "options": ["Regenerative grazing", "Overgrazing", "Continuous grazing", "Soil erosion"],
+                "answer": "Regenerative grazing"
+            },
+            {
+                "question": "What is the main benefit of low-input livestock systems?",
+                "options": ["Reduced costs", "Increased water usage", "Soil erosion", "Crop failure"],
+                "answer": "Reduced costs"
+            },
+            {
+                "question": "Which technology improves pasture management in sustainable systems?",
+                "options": ["Drones", "Tractors", "Manual gauges", "Smart meters"],
+                "answer": "Drones"
+            },
+            {
+                "question": "What is the main purpose of silvopastoral systems in sustainable farming?",
+                "options": ["Increase biodiversity", "Increase water usage", "Soil erosion", "Crop failure"],
+                "answer": "Increase biodiversity"
+            },
+            {
+                "question": "Which practice reduces water contamination in livestock systems?",
+                "options": ["Manure management", "Overgrazing", "Continuous grazing", "Soil erosion"],
+                "answer": "Manure management"
+            },
+            {
+                "question": "What is the main benefit of rotational grazing in sustainable systems?",
+                "options": ["Improved pasture health", "Increased water usage", "Soil erosion", "Crop failure"],
+                "answer": "Improved pasture health"
+            },
+            {
+                "question": "Which practice improves animal welfare in sustainable systems?",
+                "options": ["Free-range housing", "Overgrazing", "Continuous grazing", "Soil erosion"],
+                "answer": "Free-range housing"
+            },
+            {
+                "question": "What is the main purpose of soil testing in livestock systems?",
+                "options": ["Optimize fertility", "Increase water usage", "Soil erosion", "Crop failure"],
+                "answer": "Optimize fertility"
+            },
+            {
+                "question": "Which practice reduces energy use in livestock systems?",
+                "options": ["Solar power", "Overgrazing", "Continuous grazing", "Soil erosion"],
+                "answer": "Solar power"
+            },
+            {
+                "question": "What is the main benefit of mixed farming systems?",
+                "options": ["Resource recycling", "Increased water usage", "Soil erosion", "Crop failure"],
+                "answer": "Resource recycling"
+            },
+            {
+                "question": "Which technology monitors soil health in livestock systems?",
+                "options": ["Soil sensors", "Drones", "Tractors", "Manual gauges"],
+                "answer": "Soil sensors"
+            },
+            {
+                "question": "What is the main purpose of cover crops in sustainable systems?",
+                "options": ["Reduce erosion", "Increase water usage", "Soil erosion", "Crop failure"],
+                "answer": "Reduce erosion"
+            },
+            {
+                "question": "Which practice improves nutrient cycling in livestock systems?",
+                "options": ["Manure application", "Overgrazing", "Continuous grazing", "Soil erosion"],
+                "answer": "Manure application"
+            },
+            {
+                "question": "What is the main benefit of agroecological livestock systems?",
+                "options": ["Ecosystem balance", "Increased water usage", "Soil erosion", "Crop failure"],
+                "answer": "Ecosystem balance"
+            },
+            {
+                "question": "Which practice reduces greenhouse gas emissions in livestock systems?",
+                "options": ["Feed additives", "Overgrazing", "Continuous grazing", "Soil erosion"],
+                "answer": "Feed additives"
+            },
+            {
+                "question": "What is the main purpose of water recycling in livestock systems?",
+                "options": ["Reduce water use", "Increase water usage", "Soil erosion", "Crop failure"],
+                "answer": "Reduce water use"
+            },
+            {
+                "question": "Which practice improves pasture resilience in sustainable systems?",
+                "options": ["Diverse species", "Overgrazing", "Continuous grazing", "Soil erosion"],
+                "answer": "Diverse species"
+            },
+            {
+                "question": "What is the main benefit of biogas production in livestock farms?",
+                "options": ["Renewable energy", "Increased water usage", "Soil erosion", "Crop failure"],
+                "answer": "Renewable energy"
+            },
+            {
+                "question": "Which technology improves livestock health monitoring in sustainable systems?",
+                "options": ["Wearable sensors", "Drones", "Tractors", "Manual gauges"],
+                "answer": "Wearable sensors"
+            },
+            {
+                "question": "What is the main purpose of rotational grazing in sustainable systems?",
+                "options": ["Improve soil health", "Increase water usage", "Soil erosion", "Crop failure"],
+                "answer": "Improve soil health"
+            },
+            {
+                "question": "Which practice reduces odor in livestock systems?",
+                "options": ["Manure treatment", "Overgrazing", "Continuous grazing", "Soil erosion"],
+                "answer": "Manure treatment"
+            },
+            {
+                "question": "What is the main benefit of organic feed in sustainable systems?",
+                "options": ["Reduced chemical residues", "Increased water usage", "Soil erosion", "Crop failure"],
+                "answer": "Reduced chemical residues"
+            },
+            {
+                "question": "Which practice improves water infiltration in pastures?",
+                "options": ["Aeration", "Overgrazing", "Continuous grazing", "Soil erosion"],
+                "answer": "Aeration"
+            },
+            {
+                "question": "What is the main purpose of buffer strips in livestock systems?",
+                "options": ["Reduce runoff", "Increase water usage", "Soil erosion", "Crop failure"],
+                "answer": "Reduce runoff"
+            },
+            {
+                "question": "Which practice improves animal productivity in sustainable systems?",
+                "options": ["Balanced nutrition", "Overgrazing", "Continuous grazing", "Soil erosion"],
+                "answer": "Balanced nutrition"
+            },
+            {
+                "question": "What is the main benefit of silvopastoral systems in sustainable farming?",
+                "options": ["Improved microclimate", "Increased water usage", "Soil erosion", "Crop failure"],
+                "answer": "Improved microclimate"
+            },
+            {
+                "question": "Which practice reduces parasite loads in sustainable systems?",
+                "options": ["Rotational grazing", "Overgrazing", "Continuous grazing", "Soil erosion"],
+                "answer": "Rotational grazing"
+            }
+        ]
+    },
+    "climate-smart-agriculture": {
+        "title": "Climate-Smart Agriculture Quiz",
+        "questions": [
+            {
+                "question": "Which feed additive reduces methane emissions by 30%?",
+                "options": ["Seaweed", "Corn", "Soybean", "Wheat"],
+                "answer": "Seaweed"
+            },
+            {
+                "question": "How much water is saved by efficient irrigation in pastures?",
+                "options": ["20%", "30%", "40%", "50%"],
+                "answer": "40%"
+            },
+            {
+                "question": "Which breed is heat-tolerant in climate-smart agriculture?",
+                "options": ["Holstein", "Zebu", "Angus", "Jersey"],
+                "answer": "Zebu"
+            },
+            {
+                "question": "What is a benefit of rotational grazing in climate-smart agriculture?",
+                "options": ["1 ton/ha/year carbon storage", "Increased water usage", "Soil erosion", "Crop failure"],
+                "answer": "1 ton/ha/year carbon storage"
+            },
+            {
+                "question": "What is a challenge in climate-smart agriculture adoption?",
+                "options": ["Low cost", "High upfront costs", "No regulation", "Soil health"],
+                "answer": "High upfront costs"
+            },
+            {
+                "question": "Which practice reduces nitrous oxide emissions in pastures?",
+                "options": ["Optimized fertilization", "Overgrazing", "Continuous grazing", "Soil erosion"],
+                "answer": "Optimized fertilization"
+            },
+            {
+                "question": "What is the main benefit of agroforestry in climate-smart agriculture?",
+                "options": ["Carbon sequestration", "Increased water usage", "Soil erosion", "Crop failure"],
+                "answer": "Carbon sequestration"
+            },
+            {
+                "question": "Which technology monitors climate impacts in agriculture?",
+                "options": ["Weather stations", "Drones", "Tractors", "Manual gauges"],
+                "answer": "Weather stations"
+            },
+            {
+                "question": "What is the main purpose of cover crops in climate-smart agriculture?",
+                "options": ["Reduce erosion", "Increase water usage", "Soil erosion", "Crop failure"],
+                "answer": "Reduce erosion"
+            },
+            {
+                "question": "Which practice improves drought resilience in pastures?",
+                "options": ["Deep-rooted grasses", "Overgrazing", "Continuous grazing", "Soil erosion"],
+                "answer": "Deep-rooted grasses"
+            },
+            {
+                "question": "What is the main benefit of precision irrigation in climate-smart agriculture?",
+                "options": ["Reduced water use", "Increased water usage", "Soil erosion", "Crop failure"],
+                "answer": "Reduced water use"
+            },
+            {
+                "question": "Which practice reduces ammonia emissions in climate-smart agriculture?",
+                "options": ["Manure management", "Overgrazing", "Continuous grazing", "Soil erosion"],
+                "answer": "Manure management"
+            },
+            {
+                "question": "What is the main purpose of silvopastoral systems in climate-smart agriculture?",
+                "options": ["Increase shade", "Increase water usage", "Soil erosion", "Crop failure"],
+                "answer": "Increase shade"
+            },
+            {
+                "question": "Which breed is drought-tolerant in climate-smart agriculture?",
+                "options": ["Brahman", "Holstein", "Angus", "Jersey"],
+                "answer": "Brahman"
+            },
+            {
+                "question": "What is the main benefit of rotational grazing in climate-smart agriculture?",
+                "options": ["Improved soil health", "Increased water usage", "Soil erosion", "Crop failure"],
+                "answer": "Improved soil health"
+            },
+            {
+                "question": "Which technology improves water efficiency in climate-smart agriculture?",
+                "options": ["Drip irrigation", "Drones", "Tractors", "Manual gauges"],
+                "answer": "Drip irrigation"
+            },
+            {
+                "question": "What is the main purpose of biogas production in climate-smart agriculture?",
+                "options": ["Renewable energy", "Increase water usage", "Soil erosion", "Crop failure"],
+                "answer": "Renewable energy"
+            },
+            {
+                "question": "Which practice improves soil carbon in climate-smart agriculture?",
+                "options": ["No-till farming", "Overgrazing", "Continuous grazing", "Soil erosion"],
+                "answer": "No-till farming"
+            },
+            {
+                "question": "What is the main benefit of integrated crop-livestock systems in climate-smart agriculture?",
+                "options": ["Nutrient cycling", "Increased water usage", "Soil erosion", "Crop failure"],
+                "answer": "Nutrient cycling"
+            },
+            {
+                "question": "Which practice reduces heat stress in livestock?",
+                "options": ["Shade provision", "Overgrazing", "Continuous grazing", "Soil erosion"],
+                "answer": "Shade provision"
+            },
+            {
+                "question": "What is the main purpose of feed additives in climate-smart agriculture?",
+                "options": ["Reduce methane", "Increase water usage", "Soil erosion", "Crop failure"],
+                "answer": "Reduce methane"
+            },
+            {
+                "question": "Which technology monitors livestock health in climate-smart agriculture?",
+                "options": ["Wearable sensors", "Drones", "Tractors", "Manual gauges"],
+                "answer": "Wearable sensors"
+            },
+            {
+                "question": "What is the main benefit of organic farming in climate-smart agriculture?",
+                "options": ["Reduced chemical use", "Increased water usage", "Soil erosion", "Crop failure"],
+                "answer": "Reduced chemical use"
+            },
+            {
+                "question": "Which practice improves water retention in pastures?",
+                "options": ["Mulching", "Overgrazing", "Continuous grazing", "Soil erosion"],
+                "answer": "Mulching"
+            },
+            {
+                "question": "What is the main purpose of soil testing in climate-smart agriculture?",
+                "options": ["Optimize fertility", "Increase water usage", "Soil erosion", "Crop failure"],
+                "answer": "Optimize fertility"
+            },
+            {
+                "question": "Which practice reduces greenhouse gas emissions in climate-smart agriculture?",
+                "options": ["Anaerobic digestion", "Overgrazing", "Continuous grazing", "Soil erosion"],
+                "answer": "Anaerobic digestion"
+            },
+            {
+                "question": "What is the main benefit of mixed-species grazing in climate-smart agriculture?",
+                "options": ["Improved pasture use", "Increased water usage", "Soil erosion", "Crop failure"],
+                "answer": "Improved pasture use"
+            },
+            {
+                "question": "Which technology improves feed efficiency in climate-smart agriculture?",
+                "options": ["Precision feeding", "Drones", "Tractors", "Manual gauges"],
+                "answer": "Precision feeding"
+            },
+            {
+                "question": "What is the main purpose of buffer strips in climate-smart agriculture?",
+                "options": ["Reduce runoff", "Increase water usage", "Soil erosion", "Crop failure"],
+                "answer": "Reduce runoff"
+            },
+            {
+                "question": "Which practice improves biodiversity in climate-smart agriculture?",
+                "options": ["Polyculture", "Overgrazing", "Continuous grazing", "Soil erosion"],
+                "answer": "Polyculture"
+            },
+            {
+                "question": "What is the main benefit of solar power in climate-smart agriculture?",
+                "options": ["Reduced energy costs", "Increased water usage", "Soil erosion", "Crop failure"],
+                "answer": "Reduced energy costs"
+            },
+            {
+                "question": "Which practice reduces soil compaction in climate-smart agriculture?",
+                "options": ["Rotational grazing", "Overgrazing", "Continuous grazing", "Soil erosion"],
+                "answer": "Rotational grazing"
+            },
+            {
+                "question": "What is the main purpose of agroecological practices in climate-smart agriculture?",
+                "options": ["Ecosystem balance", "Increase water usage", "Soil erosion", "Crop failure"],
+                "answer": "Ecosystem balance"
+            },
+            {
+                "question": "Which technology monitors soil moisture in climate-smart agriculture?",
+                "options": ["Soil sensors", "Drones", "Tractors", "Manual gauges"],
+                "answer": "Soil sensors"
+            },
+            {
+                "question": "What is the main benefit of manure management in climate-smart agriculture?",
+                "options": ["Reduced emissions", "Increased water usage", "Soil erosion", "Crop failure"],
+                "answer": "Reduced emissions"
+            },
+            {
+                "question": "Which practice improves pasture resilience in climate-smart agriculture?",
+                "options": ["Diverse species", "Overgrazing", "Continuous grazing", "Soil erosion"],
+                "answer": "Diverse species"
+            },
+            {
+                "question": "What is the main purpose of water recycling in climate-smart agriculture?",
+                "options": ["Reduce water use", "Increase water usage", "Soil erosion", "Crop failure"],
+                "answer": "Reduce water use"
+            },
+            {
+                "question": "Which practice reduces parasite loads in climate-smart agriculture?",
+                "options": ["Mixed-species grazing", "Overgrazing", "Continuous grazing", "Soil erosion"],
+                "answer": "Mixed-species grazing"
+            },
+            {
+                "question": "What is the main benefit of no-till farming in climate-smart agriculture?",
+                "options": ["Soil carbon storage", "Increased water usage", "Soil erosion", "Crop failure"],
+                "answer": "Soil carbon storage"
+            },
+            {
+                "question": "Which technology improves pasture monitoring in climate-smart agriculture?",
+                "options": ["Drones", "Tractors", "Manual gauges", "Smart meters"],
+                "answer": "Drones"
+            },
+            {
+                "question": "What is the main purpose of shade provision in climate-smart agriculture?",
+                "options": ["Reduce heat stress", "Increase water usage", "Soil erosion", "Crop failure"],
+                "answer": "Reduce heat stress"
+            },
+            {
+                "question": "Which practice improves nutrient cycling in climate-smart agriculture?",
+                "options": ["Manure application", "Overgrazing", "Continuous grazing", "Soil erosion"],
+                "answer": "Manure application"
+            },
+            {
+                "question": "What is the main benefit of regenerative agriculture in climate-smart agriculture?",
+                "options": ["Improved soil health", "Increased water usage", "Soil erosion", "Crop failure"],
+                "answer": "Improved soil health"
+            },
+            {
+                "question": "Which practice reduces water contamination in climate-smart agriculture?",
+                "options": ["Riparian buffers", "Overgrazing", "Continuous grazing", "Soil erosion"],
+                "answer": "Riparian buffers"
+            },
+            {
+                "question": "What is the main purpose of precision feeding in climate-smart agriculture?",
+                "options": ["Reduce waste", "Increase water usage", "Soil erosion", "Crop failure"],
+                "answer": "Reduce waste"
+            },
+            {
+                "question": "Which practice improves animal welfare in climate-smart agriculture?",
+                "options": ["Free-range housing", "Overgrazing", "Continuous grazing", "Soil erosion"],
+                "answer": "Free-range housing"
+            },
+            {
+                "question": "What is the main benefit of anaerobic digestion in climate-smart agriculture?",
+                "options": ["Renewable energy", "Increased water usage", "Soil erosion", "Crop failure"],
+                "answer": "Renewable energy"
+            },
+            {
+                "question": "Which technology improves livestock monitoring in climate-smart agriculture?",
+                "options": ["IoT devices", "Drones", "Tractors", "Manual gauges"],
+                "answer": "IoT devices"
+            },
+            {
+                "question": "What is the main purpose of crop rotation in climate-smart agriculture?",
+                "options": ["Improve soil health", "Increase water usage", "Soil erosion", "Crop failure"],
+                "answer": "Improve soil health"
+            },
+            {
+                "question": "Which practice reduces energy use in climate-smart agriculture?",
+                "options": ["Solar power", "Overgrazing", "Continuous grazing", "Soil erosion"],
+                "answer": "Solar power"
+            }
+        ]
+    }
+};
+
+// Function to toggle theme
+function toggleTheme() {
+    const body = document.body;
+    const modeToggle = document.querySelector('.mode-toggle i');
+    if (body.getAttribute('data-theme') === 'day') {
+        body.setAttribute('data-theme', 'night');
+        modeToggle.classList.remove('fa-sun');
+        modeToggle.classList.add('fa-moon');
+    } else {
+        body.setAttribute('data-theme', 'day');
+        modeToggle.classList.remove('fa-moon');
+        modeToggle.classList.add('fa-sun');
+    }
+}
+
+// Function to create stars
+function createStars() {
+    const starsContainer = document.getElementById('stars');
+    const starSizes = ['small-star', 'medium-star', 'large-star'];
+    for (let i = 0; i < 100; i++) {
+        const star = document.createElement('div');
+        star.className = `star ${starSizes[Math.floor(Math.random() * starSizes.length)]}`;
+        star.style.left = `${Math.random() * 100}%`;
+        star.style.top = `${Math.random() * 100}%`;
+        star.style.animationDelay = `${Math.random() * 5}s`;
+        starsContainer.appendChild(star);
+    }
+}
+
+// Function to create particles
+function createParticles() {
+    const particlesContainer = document.getElementById('particles');
+    for (let i = 0; i < 50; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'floating-particle';
+        particle.style.width = `${Math.random() * 5 + 2}px`;
+        particle.style.height = particle.style.width;
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.top = `${Math.random() * 100}%`;
+        particle.style.animationDelay = `${Math.random() * 10}s`;
+        particlesContainer.appendChild(particle);
+    }
+}
+
+// Function to display quiz
+function toggleQuiz(key) {
+    const overlay = document.getElementById('quizOverlay');
+    const quizTitle = document.getElementById('quizTitle');
+    const quizContent = document.getElementById('quizContent');
+    const resultContainer = document.getElementById('resultContainer');
+    const quiz = quizQuestions[key];
+    if (quiz) {
+        quizTitle.innerHTML = quiz.title;
+        quizContent.innerHTML = '';
+        quiz.questions.forEach((q, index) => {
+            const questionDiv = document.createElement('div');
+            questionDiv.className = 'quiz-question';
+            questionDiv.innerHTML = `
+                <p class="quiz-question-text" id="question-${index}">${index + 1}. ${q.question}</p>
+                <div class="quiz-options" role="radiogroup" aria-labelledby="question-${index}">
+                    ${q.options.map((option, i) => `
+                        <div class="quiz-option">
+                            <input type="radio" name="question-${index}" id="q${index}-o${i}" value="${option}" aria-label="${option}">
+                            <label for="q${index}-o${i}">${option}</label>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            quizContent.appendChild(questionDiv);
+        });
+        resultContainer.style.display = 'none';
+        document.querySelector('.submit-btn').style.display = 'block';
+        overlay.style.display = 'flex';
+
+        // Add click event listeners to quiz options
+        const options = quizContent.querySelectorAll('.quiz-option');
+        options.forEach(option => {
+            option.addEventListener('click', (e) => {
+                const input = option.querySelector('input[type="radio"]');
+                if (!input.disabled) {
+                    input.checked = true;
+                    // Remove selected class from other options in the same question
+                    const parentOptions = option.parentElement.querySelectorAll('.quiz-option');
+                    parentOptions.forEach(opt => opt.classList.remove('selected'));
+                    // Add selected class to clicked option
+                    option.classList.add('selected');
+                }
+            });
+        });
+    }
+}
+
+// Function to submit and grade quiz
+function submitQuiz() {
+    const quizContent = document.getElementById('quizContent');
+    const resultContainer = document.getElementById('resultContainer');
+    const resultText = document.getElementById('resultText');
+    const resultScore = document.getElementById('resultScore');
+    const quizTitle = document.getElementById('quizTitle').innerText;
+    const quiz = quizQuestions[Object.keys(quizQuestions).find(key => quizQuestions[key].title === quizTitle)];
+    let score = 0;
+
+    quiz.questions.forEach((q, index) => {
+        const selectedOption = document.querySelector(`input[name="question-${index}"]:checked`);
+        const questionDiv = quizContent.children[index];
+        const options = questionDiv.querySelectorAll('.quiz-option');
+
+        // Clear previous classes
+        options.forEach(option => {
+            option.classList.remove('correct', 'incorrect', 'selected');
+        });
+
+        // Mark correct and incorrect answers
+        options.forEach(option => {
+            const label = option.querySelector('label').innerText;
+            if (label === q.answer) {
+                option.classList.add('correct');
+            } else if (selectedOption && selectedOption.value === label && label !== q.answer) {
+                option.classList.add('incorrect');
+            }
+        });
+
+        // Calculate score
+        if (selectedOption && selectedOption.value === q.answer) {
+            score++;
+        }
+
+        // Disable radio buttons
+        options.forEach(option => {
+            const input = option.querySelector('input[type="radio"]');
+            input.disabled = true;
+        });
+    });
+
+    const percentage = (score / quiz.questions.length) * 100;
+    let grade;
+    if (percentage >= 90) grade = 'A';
+    else if (percentage >= 80) grade = 'B';
+    else if (percentage >= 70) grade = 'C';
+    else if (percentage >= 60) grade = 'D';
+    else grade = 'F';
+
+    resultText.innerHTML = `Thanks to Alade Omotayo David, CEO of Kings Farms and Foods, for empowering this quiz platform! You completed the ${quizTitle}.`;
+    resultScore.innerHTML = `Score: ${score}/${quiz.questions.length} (${percentage.toFixed(2)}%) | Grade: ${grade}`;
+    resultContainer.style.display = 'block';
+    document.querySelector('.submit-btn').style.display = 'none';
+}
+
+// Function to close quiz
+function closeQuiz() {
+    const overlay = document.getElementById('quizOverlay');
+    overlay.style.display = 'none';
+}
+
+// Set footer year
+document.getElementById("footer-year").textContent = new Date().getFullYear();
+
+// Initialize stars and particles
+window.onload = () => {
+    createStars();
+    createParticles();
+};
+
+// Close quiz on escape key
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+        closeQuiz();
+    }
+});
+    </script>
+</body>
+</html>
